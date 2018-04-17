@@ -67,10 +67,15 @@ public class Apartamento {
 	 */
 	public Apartamento(
 			@JsonProperty(value="id") Long id,
-			@JsonProperty(value="amoblado") Boolean amoblado,
+			@JsonProperty(value="amoblado") Integer amoblado,
 			@JsonProperty(value="costo_admin") Double costo_admin ) {
 		this.id = id;
-		this.amoblado = amoblado;
+		Boolean rta = false;
+		if(amoblado == 1)
+		{
+			rta = true;
+		}
+		this.amoblado = rta;
 		this.costo_admin = costo_admin;
 		// TODO propuesta y servicos basicos
 		this.serviciosBasicos = new ArrayList<>();

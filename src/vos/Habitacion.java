@@ -61,10 +61,15 @@ public class Habitacion {
 	 */
 	public Habitacion (
 			@JsonProperty(value="id") Long id,
-			@JsonProperty(value="precio_especial") Boolean precio_especial,
+			@JsonProperty(value="precio_especial") Integer precio_especial,
 			@JsonProperty(value="tipo_habitacion") String tipo_habitacion) {
 		this.id = id;
-		this.precio_especial = precio_especial;
+		Boolean rta = false;
+		if(precio_especial == 1)
+		{
+			rta = true;
+		}
+		this.precio_especial = rta;
 		this.tipo_habitacion = tipo_habitacion;
 		//TODO inicializar propesta y servicios
 	}

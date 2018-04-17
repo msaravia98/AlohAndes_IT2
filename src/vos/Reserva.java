@@ -66,17 +66,15 @@ public class Reserva {
 	@JsonProperty(value="cantidad_personas")
 	private Integer cantidad_personas;
 	
-	/**
-	 * Determina si existe una multa hacia el cliente
-	 */
-	@JsonProperty(value= "hay_multa")
-	private Boolean hayMulta;
 	
 	/**
 	 * el costo se hay multa
 	 */
-	@JsonProperty(value="valor_multa")
-	private Double valorMulta;
+	@JsonProperty(value="multa")
+	private Double multa;
+	
+	@JsonProperty(value="IdColectivo")
+	private Long IdColectivo;
 	
 	/**
 	 * propuesta de la reserva

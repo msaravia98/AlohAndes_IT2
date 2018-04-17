@@ -64,8 +64,8 @@ public class Propuesta {
 	/**
 	 * Representa el tipo de inmuble hostel de la propuesta
 	 */
-	@JsonProperty(value="hostel")
-	private Hostel hostel;
+	@JsonProperty(value="hostal")
+	private Hostal hostal;
 	
 	/**
 	 * Representa el tipo de inmuble hotel de la propuesta
@@ -88,8 +88,14 @@ public class Propuesta {
 	/**
 	 * atributo que define si la propuesta se debe retirar
 	 */
-	@JsonProperty(value="se_va_retirar")
-	private Boolean seVaRetirar;
+	@JsonProperty(value="seRetira")
+	private Boolean seRetira;
+	
+	@JsonProperty(value="capacidad")
+	private Integer capacidad;
+	
+	@JsonProperty(value="costo")
+	private Integer costo;
 	
 	/**
 	 * 
@@ -114,11 +120,11 @@ public class Propuesta {
 		this.tipo_inmueble = tipo_inmueble;
 		this.apartamento = null;
 		this.habitacion = null;
-		this.hostel = null;
+		this.hostal = null;
 		this.hotel = null;
 		this.vivienda_express = null;
 		this.vivienda_universitarias = null;
-		this.seVaRetirar= false;
+		this.seRetira= false;
 		
 		
 		this.habilitada= true;
@@ -156,12 +162,12 @@ public class Propuesta {
 		this.habitacion = habitacion;
 	}
 
-	public Hostel getHostel() {
-		return hostel;
+	public Hostal getHostal() {
+		return hostal;
 	}
 
-	public void setHostel(Hostel hostel) {
-		this.hostel = hostel;
+	public void setHostal(Hostal hostel) {
+		this.hostal = hostel;
 	}
 
 	public Hotel getHotel() {
@@ -201,7 +207,7 @@ public class Propuesta {
 	 * @return the seVaRetirar
 	 */
 	public Boolean getSeVaRetirar() {
-		return seVaRetirar;
+		return seRetira;
 	}
 
 
@@ -209,7 +215,7 @@ public class Propuesta {
 	 * @param seVaRetirar the seVaRetirar to set
 	 */
 	public void setSeVaRetirar(Boolean seVaRetirar) {
-		this.seVaRetirar = seVaRetirar;
+		this.seRetira = seVaRetirar;
 	}
 
 

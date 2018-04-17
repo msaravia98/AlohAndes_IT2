@@ -57,7 +57,7 @@ public class DAOPersona {
 	/**
 	 * Constante para indicar el usuario Oracle del estudiante
 	 */
-	public final static String USUARIO = "ISIS2304A491810";
+	public final static String USUARIO = "ISIS2304A901810";
 
 
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ public class DAOPersona {
 
 		ArrayList<Persona> operadores = new ArrayList<Persona>();
 
-		String sql = String.format("SELECT * FROM %1$s.PERSONAS WHERE ROL = 'operador'", USUARIO);
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE PAPEL = 'Operador'", USUARIO);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -124,7 +124,7 @@ public class DAOPersona {
 
 		ArrayList<Persona> clientes = new ArrayList<Persona>();
 
-		String sql = String.format("SELECT * FROM %1$s.PERSONAS WHERE ROL = 'cliente'", USUARIO);
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE PAPEL = 'Cliente'", USUARIO);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -148,7 +148,7 @@ public class DAOPersona {
 
 		ArrayList<Propuesta> props = new ArrayList<Propuesta>();
 
-		String sql = String.format("SELECT * FROM %1$s.PROPUESTAS", USUARIO);
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTA", USUARIO);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -169,7 +169,7 @@ public class DAOPersona {
 		
 		Propuesta propuesta = null;
 
-		String sql = String.format("SELECT * FROM %1$s.PROPUESTAS WHERE ID = %2$d", USUARIO, id); 
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTA WHERE ID = %2$d", USUARIO, id); 
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -198,7 +198,7 @@ public class DAOPersona {
 
 		ArrayList<Persona> personas = new ArrayList<Persona>();
 
-		String sql = String.format("SELECT * FROM %1$s.PERSONAS WHERE TIPO = '%2$s'", USUARIO, tipo);
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE TIPO = '%2$s'", USUARIO, tipo);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 
 		recursos.add(prepStmt);
@@ -223,7 +223,7 @@ public class DAOPersona {
 	{
 		Persona pep = null;
 
-		String sql = String.format("SELECT * FROM %1$s.PERSONAS WHERE ID = %2$d", USUARIO, id); 
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE ID = %2$d", USUARIO, id); 
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -250,17 +250,15 @@ public class DAOPersona {
 
 		String sql = 
 				String.format(
-						"INSERT INTO %1$s.PERSONAS (ID, NOMBRE, APELLIDO, CEDULA, TIPO, NIT, ROL EMAIL) "
-								+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s', '%9$s' )", 
+						"INSERT INTO %1$s.PERSONA (ID, NOMBRE, APELLIDO,TIPO,PAPEL,VALOR_MULTA) "
+								+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s')", 
 								USUARIO, 
 								persona.getId(), 
 								persona.getNombre(),
-								persona.getApellido(), 
-								persona.getCedula(),
 								persona.getTipo(),
 								persona.getNit(),
 								persona.getRol(),
-								persona.getEmail()
+								
 						);
 		System.out.println(sql);
 

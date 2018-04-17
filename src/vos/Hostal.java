@@ -9,7 +9,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * @author sebastian
  *
  */
-public class Hostel extends InmuebleHotelero {
+public class Hostal extends InmuebleHotelero {
 
 
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ public class Hostel extends InmuebleHotelero {
 	 * @param horario_admin_inicial
 	 * @param horario_admin_final
 	 */
-	public Hostel(
+	public Hostal(
 			@JsonProperty(value="id") Long id,
 			@JsonProperty(value="registro_camara_comercio") String registro_camara_comercio,
 			@JsonProperty(value="registro_superintendencia") String registro_superintendencia,

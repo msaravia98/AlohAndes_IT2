@@ -41,13 +41,12 @@ public class Operador extends Persona {
 	public Operador(  
 			@JsonProperty(value="id")Long id, 
 			@JsonProperty(value="nombre")String nombre , 
-			@JsonProperty(  value="apellido")String apellido  ,  
+			@JsonProperty(value="apellido")String apellido  ,  
 			@JsonProperty(value="tipo")String tipo,
-			@JsonProperty(value="rol") String rol,
-			@JsonProperty(value="nit") String nit,
-			@JsonProperty(value="cedula") String cedula,
-			@JsonProperty(value="email") String email) {                                
-		super(id, nombre, apellido, tipo, rol, nit, cedula, email);
+			@JsonProperty(value="papel") String papel,
+			@JsonProperty(value="multa") Integer multa) { 
+	
+		super(id, nombre, apellido, tipo, papel, null);
 		// TODO this.propuestas = new ArrayList<>();
 	}
 

@@ -19,13 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import dao.DAOBebedor;
+
 import dao.DAOPersona;
 import dao.DAOReserva;
-import vos.Bebedor;
 import vos.Persona;
 import vos.Propuesta;
 import vos.Reserva;
+import vos.ReservaColectiva;
 
 /**
  * 
@@ -309,7 +309,7 @@ public class AlohandesTransactionManager {
 			dao.setConn(conn);
 			persona = dao.findPersonaById(id);
 			if(persona == null)
-				throw new Exception("La persona con el id = " + id + " no se encuentra persistido en la base de datos.");				
+				throw new Exception("La persona con el id = " + id + " no se encuentra persistida en la base de datos.");				
 		} 
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -502,7 +502,7 @@ public class AlohandesTransactionManager {
 			this.conn = darConexion();
 			dao.setConn( conn );
 			if ( this.getPersonaById(persona.getId()) == null )
-				throw new Exception("El bebedor con el id = " + persona.getId() + " no se encuentra persistido en la base de datos.");
+				throw new Exception("La persona con el id = " + persona.getId() + " no se encuentra persistida en la base de datos.");
 			else
 				dao.updatePersona(persona);
 
@@ -549,7 +549,7 @@ public class AlohandesTransactionManager {
 			this.conn = darConexion();
 			dao.setConn( conn );
 			if ( this.getPersonaById(persona.getId()) == null )
-				throw new Exception("El bebedor con el id = " + persona.getId() + " no se encuentra persistido en la base de datos.");
+				throw new Exception("La persona con el id = " + persona.getId() + " no se encuentra persistido en la base de datos.");
 			else 
 				dao.deletePersona(persona);
 
@@ -590,7 +590,7 @@ public class AlohandesTransactionManager {
 			dao.setConn(conn);
 			reserva = dao.getReservaById(id);
 			if(reserva == null)
-				throw new Exception("La reserva con el id = " + id + " no se encuentra persistido en la base de datos.");				
+				throw new Exception("La reserva con el id = " + id + " no se encuentra persistida en la base de datos.");				
 		} 
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -617,7 +617,43 @@ public class AlohandesTransactionManager {
 		}
 		return reserva;
 	}
-	
+public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
+		
+		DAOReserva dao= new DAOReserva();
+		List<Reserva> reservas= new ArrayList<>();
+		try 
+		{
+			this.conn = darConexion();
+			dao.setConn(conn);
+			reservas = dao.getReservaByIdColectivo(id);
+			if(reservas == null)
+				throw new Exception("No hay reservas colectivas con el id = " + id);				
+		} 
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return reservas;
+	}
 	/**
 	 * metodo que registra la reserva en la base de datos
 	 * @param reserva
@@ -654,7 +690,43 @@ public class AlohandesTransactionManager {
 			}
 		}
 	}
-
+	
+	/**
+	 * metodo que registra la reserva en la base de datos
+	 * @param reserva
+	 * @throws Exception
+	 */
+	public void registrarReservaColectiva(ReservaColectiva reserva) throws Exception {
+		
+		DAOReserva dao= new DAOReserva();
+		
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			dao.registrarReservaColectiva(reserva);
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		}catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
 	/**
 	 * 
 	 * @param reserva
@@ -696,7 +768,47 @@ public class AlohandesTransactionManager {
 			}
 		}
 	}
-	
+	/**
+	 * 
+	 * @param reserva
+	 * @throws Exception
+	 */
+	public void cancelarReservaColectiva(ReservaColectiva reserva) throws Exception{
+		
+		DAOReserva dao= new DAOReserva();
+		
+		try
+		{
+			this.conn = darConexion();
+			dao.setConn( conn );
+			if ( this.getReservaByIdColectivo(reserva.getIdColectivo())== null )
+				throw new Exception("Las reservas con el ID colectivo = " + reserva.getIdColectivo() + " no se encuentran persistidas en la base de datos.");
+			else
+				dao.cancelarReservaColectiva(reserva);
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
 	public Propuesta getPropuestaById(Long id) throws Exception{
 		
 		DAOPersona dao= new DAOPersona();
@@ -707,7 +819,7 @@ public class AlohandesTransactionManager {
 			dao.setConn(conn);
 			propuesta = dao.getPropuestaById(id);
 			if(propuesta == null)
-				throw new Exception("La propuesta con el id = " + id + " no se encuentra persistido en la base de datos.");				
+				throw new Exception("La propuesta con el id = " + id + " no se encuentra persistida en la base de datos.");				
 		} 
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -749,7 +861,7 @@ public class AlohandesTransactionManager {
 			this.conn = darConexion();
 			dao.setConn( conn );
 			if(this.getPropuestaById(propuesta.getId()) == null)
-				throw new Exception("La propuesta con el id = " + propuesta.getId() + " no se encuentra persistido en la base de datos.");
+				throw new Exception("La propuesta con el id = " + propuesta.getId() + " no se encuentra persistida en la base de datos.");
 			else
 				dao.retirarPropuesta(propuesta);
 		}

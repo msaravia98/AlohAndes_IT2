@@ -45,8 +45,8 @@ public class Reserva {
 	/**
 	 * Fecha en la que la persona empieza a hacer uso del inmueble
 	 */
-	@JsonProperty(value="fecha_inicio_estadia")
-	private String fecha_inicio_estadia;
+	@JsonProperty(value="fecha_inicio")
+	private String fecha_inicio;
 
 	/**
 	 * Duracion de la estadia en DIAS
@@ -72,6 +72,7 @@ public class Reserva {
 	 */
 	@JsonProperty(value="multa")
 	private Double multa;
+	
 	
 	@JsonProperty(value="IdColectivo")
 	private Long IdColectivo;
@@ -114,19 +115,18 @@ public class Reserva {
 			@JsonProperty(value="duracion") Integer duracion,
 			@JsonProperty(value="costo_total") Double costo_total,
 			@JsonProperty(value="cantidad_personas") Integer cantidad_personas,
-			@JsonProperty(value= "hay_multa") Boolean hayMulta,
-			@JsonProperty(value="vlor_multa") Double valorMulta,
+			@JsonProperty(value="valorMulta") Double valorMulta,
+			@JsonProperty(value="IDColectivo") Long IDColectivo,
 			@JsonProperty(value= "propuesta") Propuesta propuesta,
 			@JsonProperty(value= "cliente") Cliente cliente) {
 		this.id = id;
 		this.fecha_registro = fecha_registro;
 		this.fecha_cancelacion = fecha_cancelacion;
-		this.fecha_inicio_estadia = fecha_inicio_estadia;
+		this.fecha_inicio = fecha_inicio_estadia;
 		this.duracion = duracion;
 		this.costo_total = costo_total;
 		this.cantidad_personas = cantidad_personas;
-		this.hayMulta= hayMulta;
-		this.valorMulta= valorMulta;
+		this.multa= valorMulta;
 		//TODO inizialicar propuesta y cliente
 		
 		this.propuesta= propuesta;
@@ -167,11 +167,11 @@ public class Reserva {
 	}
 
 	public String getFecha_inicio_estadia() {
-		return fecha_inicio_estadia;
+		return fecha_inicio;
 	}
 
 	public void setFecha_inicio_estadia(String fecha_inicio_estadia) {
-		this.fecha_inicio_estadia = fecha_inicio_estadia;
+		this.fecha_inicio = fecha_inicio_estadia;
 	}
 
 	/**
@@ -234,54 +234,12 @@ public class Reserva {
 		this.cliente = cliente;
 	}
 	
-	
-	
-	/**
-	 * @return the hayMulta
-	 */
-	public Boolean getHayMulta() {
-		return hayMulta;
-	}
-
-
-
-
-	/**
-	 * @param hayMulta the hayMulta to set
-	 */
-	public void setHayMulta(Boolean hayMulta) {
-		this.hayMulta = hayMulta;
-	}
-
-
-
-
-	/**
-	 * @return the valorMulta
-	 */
-	public Double getValorMulta() {
-		return valorMulta;
-	}
-
-
-
-
-	/**
-	 * @param valorMulta the valorMulta to set
-	 */
-	public void setValorMulta(Double valorMulta) {
-		this.valorMulta = valorMulta;
-	}
-
-
-
-
 	public Date getFechaFinal() throws Exception{
 		
         DateFormat formato= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
 		Date fechaInicio;
 		
-		fechaInicio = formato.parse(fecha_inicio_estadia);
+		fechaInicio = formato.parse(fecha_inicio);
         
 		Calendar cal= Calendar.getInstance();
 		
@@ -290,6 +248,34 @@ public class Reserva {
 		Date fechaFin= cal.getTime();
 		
 		return fechaFin;
+	}
+
+
+
+
+	public Double getMulta() {
+		return multa;
+	}
+
+
+
+
+	public void setMulta(Double multa) {
+		this.multa = multa;
+	}
+
+
+
+
+	public Long getIdColectivo() {
+		return IdColectivo;
+	}
+
+
+
+
+	public void setIdColectivo(Long idColectivo) {
+		IdColectivo = idColectivo;
 	}
 
 

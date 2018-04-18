@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 
 import tm.AlohandesTransactionManager;
 import vos.Reserva;
+import vos.ReservaColectiva;
 
 @Path("reservas")
 public class ReservaService {
@@ -89,6 +90,25 @@ public class ReservaService {
 			}
 	}
 	
+	/**
+	 * 
+	 * @param reserva
+	 * @return
+	 */
+	@POST
+	@Produces({ MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.APPLICATION_JSON })
+	public Response registrarReserva(ReservaColectiva reserva) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			tm.registrarReservaColectiva(reserva);
+			return Response.status(200).entity(reserva).build();
+			}catch( Exception e ){
+				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+			}
+	}
+	
 	
 	
 	
@@ -105,6 +125,25 @@ public class ReservaService {
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
 			tm.cancelarReserva(reserva);
+			return Response.status( 200 ).entity(reserva).build();
+		} catch (Exception e) {
+			return Response.status( 500 ).entity(doErrorMessage(e)).build();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param reserva
+	 * @return
+	 */
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response cancelarReservaColectiva(ReservaColectiva reserva) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			tm.cancelarReservaColectiva(reserva);
 			return Response.status( 200 ).entity(reserva).build();
 		} catch (Exception e) {
 			return Response.status( 500 ).entity(doErrorMessage(e)).build();

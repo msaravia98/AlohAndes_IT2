@@ -25,13 +25,13 @@ public class Propuesta {
 
 	/**
 	 * Representa el tipo de inmueble de la propuesta
-	 * @author sebastian
+	 * @author Joseph
 	 *
 	 */
 	public enum TIPO_INMUEBLE {
 		APARTAMENTO,
 		HABITACION,
-		HOSTEL,
+		HOSTAL,
 		HOTEL,
 		VIVIENDA_EXPRESS,
 		VIVIENDA_UNIVERSITARIA;

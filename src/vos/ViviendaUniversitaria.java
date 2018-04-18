@@ -29,12 +29,6 @@ public class ViviendaUniversitaria {
 	private String ubicacion;
 
 	/**
-	 * Capacidad del inmueble
-	 */
-	@JsonProperty(value="capacidad")
-	private String capacidad;
-
-	/**
 	 * Menaje del inmueble
 	 */
 	@JsonProperty(value="menaje")
@@ -79,15 +73,13 @@ public class ViviendaUniversitaria {
 
 	public ViviendaUniversitaria(
 			@JsonProperty(value="id") Long id,
-			@JsonProperty(value="ubicacion") String ubicacion, 
-			@JsonProperty(value="capacidad") String capacidad,
+			@JsonProperty(value="ubicacion") String ubicacion,
 			@JsonProperty(value="menaje") String menaje,
 			@JsonProperty(value="descripcion") String descripcion,
 			@JsonProperty(value="tipo") String tipo,
 			@JsonProperty(value="mensual") Boolean mensual ) {
 		this.id = id;
 		this.ubicacion = ubicacion;
-		this.capacidad = capacidad;
 		this.menaje = menaje;
 		this.descripcion = descripcion;
 		this.tipo = tipo;
@@ -118,13 +110,6 @@ public class ViviendaUniversitaria {
 		this.ubicacion = ubicacion;
 	}
 
-	public String getCapacidad() {
-		return capacidad;
-	}
-
-	public void setCapacidad(String capacidad) {
-		this.capacidad = capacidad;
-	}
 
 	public String getMenaje() {
 		return menaje;

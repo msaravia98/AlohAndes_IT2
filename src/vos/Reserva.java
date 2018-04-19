@@ -89,6 +89,18 @@ public class Reserva {
 	 */
 	@JsonProperty(value= "cliente")
 	private Cliente cliente;
+	
+	/**
+	 * Fecha en la que la persona empieza a hacer uso del inmueble
+	 */
+	@JsonProperty(value="fecha_inicio")
+	private String fecha_inicio;
+	
+	/**
+	 * el costo se hay multa
+	 */
+	@JsonProperty(value="multa")
+	private Double multa;
 
 
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -116,19 +128,18 @@ public class Reserva {
 			@JsonProperty(value="duracion") Integer duracion,
 			@JsonProperty(value="costo_total") Double costo_total,
 			@JsonProperty(value="cantidad_personas") Integer cantidad_personas,
-			@JsonProperty(value= "hay_multa") Boolean hayMulta,
-			@JsonProperty(value="vlor_multa") Double valorMulta,
+			@JsonProperty(value="valorMulta") Double valorMulta,
+			@JsonProperty(value="IDColectivo") Long IDColectivo,
 			@JsonProperty(value= "propuesta") Propuesta propuesta,
 			@JsonProperty(value= "cliente") Cliente cliente) {
 		this.id = id;
 		this.fecha_registro = fecha_registro;
 		this.fecha_cancelacion = fecha_cancelacion;
-		this.fecha_inicio_estadia = fecha_inicio_estadia;
+		this.fecha_inicio = fecha_inicio_estadia;
 		this.duracion = duracion;
 		this.costo_total = costo_total;
 		this.cantidad_personas = cantidad_personas;
-		this.hayMulta= hayMulta;
-		this.valorMulta= valorMulta;
+		this.multa= valorMulta;
 		//TODO inizialicar propuesta y cliente
 		
 		this.propuesta= propuesta;
@@ -273,6 +284,34 @@ public class Reserva {
 	 */
 	public void setValorMulta(Double valorMulta) {
 		this.valorMulta = valorMulta;
+	}
+
+
+
+
+	public String getFecha_inicio() {
+		return fecha_inicio;
+	}
+
+
+
+
+	public void setFecha_inicio(String fecha_inicio) {
+		this.fecha_inicio = fecha_inicio;
+	}
+
+
+
+
+	public Double getMulta() {
+		return multa;
+	}
+
+
+
+
+	public void setMulta(Double multa) {
+		this.multa = multa;
 	}
 
 

@@ -522,7 +522,8 @@ public class DAOPersona {
 		sql.append(String.format("UPDATE PROPUESTAS SET ", USUARIO));
 		sql.append(String.format("TIPO_INMUEBLE = '%1$s' AND ID_HOTEL = '%2$s' AND ID_HOSTEL = '%3$s'"
 				+ "AND ID_VIVIENDA_EXPRESS = '%4$s' AND ID_APARTAMENTO = '%5$s' AND ID_VIVIENDA_UNIVERSITARIA = '%6$s'"
-				+ "AND ID_HABITACION = '%7$s' AND SE_VA_RETIRAR = '%8$s' AND HABILITADA = '%9$s'", 
+				+ "AND ID_HABITACION = '%7$s' AND SE_VA_RETIRAR = '%8$s' AND HABILITADA = '%9$s' AND FECHA_INICIO_DESHABILITADA = '%10$s'"
+				+ "AND FECHA_FIN_DESHABILITADA = '%11$s'", 
 				propuesta.getTipo_inmueble(),
 				propuesta.getHotel().getId(),
 				propuesta.getHostel().getId(),
@@ -531,25 +532,11 @@ public class DAOPersona {
 				propuesta.getVivienda_universitarias().getId(),
 				propuesta.getHabitacion().getId(),
 				(propuesta.getSeVaRetirar()==true)? 1:0,
-				(propuesta.getHabilitada()==true)? 1:0
-				));
+				(propuesta.getHabilitada()==true)? 1:0,
+				propuesta.getFechaDeshabilitacionInicial(),
+				propuesta.getFechaDeshabilitacionFinal()));
 		PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
-		
-		if(propuesta.getHabilitada()) {
-			StringBuilder sql2= new StringBuilder();
-			sql2.append(String.format("UPDATE PROPUESTA_DESHABILITADA SET",	 USUARIO));
-			sql2.append(String.format("FECHA_INICIO_DESHABILITADA = '%1$s' AND FECHA_FIN_DESHABILITADA = '%2$s' WHERE ID = %3$s", 
-					propuesta.getFechaDeshabilitacionInicial(),
-					propuesta.getFechaDeshabilitacionFinal(),
-					propuesta.getId()));
-			
-			PreparedStatement prepStmt2 = conn.prepareStatement(sql2.toString());
-			recursos.add(prepStmt2);
-			prepStmt2.executeQuery();
-		}
-		
 		recursos.add(prepStmt);
-		
 		prepStmt.executeQuery();
 	}
 

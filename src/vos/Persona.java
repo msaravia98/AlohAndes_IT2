@@ -1,15 +1,5 @@
-/**-------------------------------------------------------------------
- * ISIS2304 - Sistemas Transaccionales
- * Departamento de Ingenieria de Sistemas
- * Universidad de los Andes
- * Bogota, Colombia
- * 
- * Actividad: Tutorial Parranderos: Arquitectura
- * Autores:
- * 			Santiago Cortes Fernandez	-	s.cortes@uniandes.edu.co
- * 			Juan David Vega Guzman		-	jd.vega11@uniandes.edu.co
- * -------------------------------------------------------------------
- */
+
+
 package vos;
 
 import java.util.List;
@@ -57,36 +47,22 @@ public class Persona {
 	private String tipo;
 	
 	/**
-	 * Determina el rol de la persona {cliente, operador}
+	 * Determina el papel de la persona {cliente, operador}
 	 */
-	@JsonProperty(value="rol")
-	private String rol;
+	@JsonProperty(value="papel")
+	private String papel;
 	
 	/**
-	 * Representa el NIT de una persona, normalmento perosna tipo empresa
-	 */
-	@JsonProperty(value="nit")
-	private String nit;
-	
-	/**
-	 * Cedula de la persona
-	 */
-	@JsonProperty(value="cedula")
-	private String cedula;
-	
-	/**
-	 * Correo electronico de la persona
-	 */
-	@JsonProperty(value="email")
-	private String email;
-	
-	/**
-	 * Lista de propuestad de un operador
+	 * Lista de propuestas de un operador
 	 */
 	@JsonProperty(value="propuestas")
 	private List<Propuesta> propuestas;
 	
-	
+	/**
+	 * Es la multa que puede tener sólo un cliente.
+	 */
+	@JsonProperty(value="multa")
+	private Integer multa;
 	
 	
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -106,22 +82,16 @@ public class Persona {
 			@JsonProperty(value="nombre")String nombre , 
 			@JsonProperty(  value="apellido")String apellido  ,   
 			@JsonProperty(value="tipo")String tipo,
-			@JsonProperty(value="rol") String rol,
-			@JsonProperty(value="nit") String nit,
-			@JsonProperty(value="cedula") String cedula,
-			@JsonProperty(value="email") String email ) { 
+			@JsonProperty(value="papel") String papel,
+			@JsonProperty(value="multa") Integer multa ) { 
 		
-		if ( !tipo.equalsIgnoreCase("empresa") )
-			this.nit = null;
-		else
-			this.nit = nit;
+		
 		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.tipo = tipo;
-		this.rol = rol;
-		this.cedula = cedula;
-		this.email = email;
+		this.papel = papel;
+		this.multa = multa;
 		
 	}
 
@@ -162,69 +132,52 @@ public class Persona {
 		return tipo;
 	}
 
-	public void setCiudad(String tipo) {
-		this.tipo = tipo;
+
+
+
+	public String getPapel() {
+		return papel;
 	}
 
-	public String getRol() {
-		return rol;
+
+
+
+
+	public void setPapel(String papel) {
+		this.papel = papel;
 	}
 
-	public void setRol(String rol) {
-		this.rol = rol;
+
+
+
+
+	public Integer getMulta() {
+		return multa;
 	}
 
-	public String getNit() {
-		return nit;
+
+
+
+
+	public void setMulta(Integer multa) {
+		this.multa = multa;
 	}
 
-	public void setNit(String nit) {
-		this.nit = nit;
-	}
 
-	public String getCedula() {
-		return cedula;
-	}
 
-	public void setCedula(String cedula) {
-		this.cedula = cedula;
-	}
 
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail( String email ) {
-		this.email = email;
-	}
-
-	public List<Propuesta> getPropuestas() {
-		return propuestas;
-	}
-
-	public void setPropuestas(List<Propuesta> propuestas) {
-		this.propuestas = propuestas;
-	}
 
 	/**
-	 * Para realizar una propuesta, se debe ser {operador} y estar asociado con
+	 * Para agregar una propuesta, se debe ser {operador} y estar asociado con
 	 * la universidad {estudiante, empleado, profesor, padre, empresa}
 	 * @param propuesta
 	 */
 	public void addPropuesta ( Propuesta propuesta ) throws BusinessLogicException {
 		
-		if (this.rol.equalsIgnoreCase("CLIENTE")) 
+		if (this.papel.equalsIgnoreCase("CLIENTE")) 
 			throw new BusinessLogicException("Un cliente no puede realizar propuestas de alohamiento. Debe estar registrado como operador y estar asociado con la universidad.");
 		if (this.tipo.equalsIgnoreCase("INVITADO") || this.tipo.equalsIgnoreCase("INVITADO")) 
-			throw new BusinessLogicException("El usuario no cuenta con los requisitos para relaizar una propuesta. Debe estar registrado como operador y estar asociado con la universidad.");
+			throw new BusinessLogicException("El usuario no cuenta con los requisitos para realizar una propuesta. Debe estar registrado como operador y estar asociado con la universidad.");
 			
 		this.propuestas.add(propuesta);
 		

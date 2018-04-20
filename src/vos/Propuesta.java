@@ -31,7 +31,7 @@ public class Propuesta {
 	public enum TIPO_INMUEBLE {
 		APARTAMENTO,
 		HABITACION,
-		HOSTEL,
+		HOSTAL,
 		HOTEL,
 		VIVIENDA_EXPRESS,
 		VIVIENDA_UNIVERSITARIA;
@@ -65,7 +65,7 @@ public class Propuesta {
 	 * Representa el tipo de inmuble hostel de la propuesta
 	 */
 	@JsonProperty(value="hostel")
-	private Hostel hostel;
+	private Hostal hostal;
 	
 	/**
 	 * Representa el tipo de inmuble hotel de la propuesta
@@ -114,7 +114,7 @@ public class Propuesta {
 		this.tipo_inmueble = tipo_inmueble;
 		this.apartamento = null;
 		this.habitacion = null;
-		this.hostel = null;
+		this.hostal = null;
 		this.hotel = null;
 		this.vivienda_express = null;
 		this.vivienda_universitarias = null;
@@ -156,12 +156,12 @@ public class Propuesta {
 		this.habitacion = habitacion;
 	}
 
-	public Hostel getHostel() {
-		return hostel;
+	public Hostal getHostal() {
+		return hostal;
 	}
 
-	public void setHostel(Hostel hostel) {
-		this.hostel = hostel;
+	public void setHostal(Hostal hostal) {
+		this.hostal = hostal;
 	}
 
 	public Hotel getHotel() {

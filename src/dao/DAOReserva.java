@@ -433,7 +433,7 @@ public class DAOReserva {
 			recursos.add(prepStmt);
 			ResultSet rs = prepStmt.executeQuery();
 			if (rs.next()) {
-				prop.setApartamento(new Apartamento(rs.getLong("ID"), rs.getInt("AMOBLADO")  , rs.getDouble("COSTO_ADMINISTRACION")));
+				prop.setApartamento(new Apartamento(rs.getLong("ID"), (rs.getInt("AMOBLADO") == 1 )? true : false  , rs.getDouble("COSTO_ADMINISTRACION")));
 			}
 		} 
 
@@ -443,7 +443,7 @@ public class DAOReserva {
 			recursos.add(prepStmt);
 			ResultSet rs = prepStmt.executeQuery();
 			if (rs.next()) {
-				prop.setHabitacion( new Habitacion(rs.getLong("ID"), rs.getInt("ESPECIAL"), rs.getString("TIPO_HABITACION")) );
+				prop.setHabitacion( new Habitacion(rs.getLong("ID"), (rs.getInt("ESPECIAL")==1)? true:false	, rs.getString("TIPO_HABITACION")) );
 			}
 		}
 
@@ -483,7 +483,7 @@ public class DAOReserva {
 			recursos.add(prepStmt);
 			ResultSet rs = prepStmt.executeQuery();
 			if (rs.next()) {
-				prop.setVivienda_universitarias( new ViviendaUniversitaria(rs.getLong("ID"), rs.getString("UBICACION"), rs.getString("MENAJE"), rs.getString("DESCRIPCION"), rs.getString("TIPO"), rs.getInt("MENSUAL") == 0 ? false : true) );
+				prop.setVivienda_universitarias( new ViviendaUniversitaria(rs.getLong("ID"), rs.getString("UBICACION"), rs.getString("CAPACIDAD"), rs.getString("MENAJE"), rs.getString("DESCRIPCION"), rs.getString("TIPO"), rs.getInt("MENSUAL") == 0 ? false : true) );
 			}
 		}
 

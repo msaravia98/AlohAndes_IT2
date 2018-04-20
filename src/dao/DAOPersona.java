@@ -297,7 +297,7 @@ public class DAOPersona {
 						+ " VALUES ( %2$d, %3$d, %4$d, %5$d, %6$d, %7$d, %8$d, %9$d, %10$d, %11$d, %12$s, %13$s  )",
 						propuesta.getId(),
 						persona.getId(),
-						propuesta.getHostel().getId(),
+						propuesta.getHostal().getId(),
 						propuesta.getHotel().getId(),
 						propuesta.getVivienda_express().getId(),
 						propuesta.getApartamento().getId(),
@@ -413,7 +413,7 @@ public class DAOPersona {
 		//necesitio las reservas que tengan esa propuesta
 		ArrayList<Reserva> reservasConPropuesta = new ArrayList<>();
 		
-		String reservitas= String.format("SELECT * FROM RESERVAS WHERE ID_PROPUESTA = %2$d", USUARIO, propuesta.getId());
+		String reservitas= String.format("SELECT * FROM RESERVAS WHERE ID_PROPUESTA = %2$d ORDER BY ID_PERSONA", USUARIO, propuesta.getId());
 		PreparedStatement prepStmt1= conn.prepareStatement(reservitas);
 		recursos.add(prepStmt1);	
 		ResultSet rs = prepStmt1.executeQuery();
@@ -422,16 +422,6 @@ public class DAOPersona {
 		while(rs.next())
 			reservasConPropuesta.add(dao.convertResultSetToReserva(rs));
 		//obtengo las reservas con la propuesta dada
-		
-		Date lastDate= new Date("1500-01-01 00:00:00");
-		for(Reserva res: reservasConPropuesta) {
-			Date temp= res.getFechaFinal();
-			if(temp.after(lastDate)) {
-				lastDate= temp;
-			}
-		}//fecha de ultima reserva que se acaba
-		
-		
 		
 		
 		//tomo las propuestas que esten en esta fecha
@@ -445,7 +435,7 @@ public class DAOPersona {
 		int n= propuestasDisponibles.size();
 		Propuesta propuestaCambio= null;
 		for(int i=0; i<n && !fin; i++) {
-			if(propuestasDisponibles.get(i).getSeVaRetirar()== false && propuestasDisponibles.get(i).getHabilitada()== true) {
+			if(propuestasDisponibles.get(i).getSeVaRetirar()== false && propuestasDisponibles.get(i).getHabilitada()== true && propuestasDisponibles.get(i) != propuesta) {
 				propuestaCambio= propuestasDisponibles.get(i);
 			}
 		}
@@ -453,6 +443,9 @@ public class DAOPersona {
 		int nr= reservasConPropuesta.size();
 		for(int i=0; i<nr; i++) 
 			reservasConPropuesta.get(i).setPropuesta(propuestaCambio);
+		
+		
+		
 		
 		dao.registrarReservaColectiva(reservasConPropuesta);//le asigno la propuesta determinada a la reserva que estaba
 		
@@ -488,6 +481,14 @@ public class DAOPersona {
 		
 	}
 	
+	
+//	public ReservaColectiva getReservaColectivaByReservas(ArrayList<Reserva> reservas) {
+//		
+//		reservas
+//		
+//	}
+	
+	
 	/**
 	 * 
 	 * @param tipoInmueble
@@ -498,9 +499,8 @@ public class DAOPersona {
 		
 		ArrayList<Propuesta> props = new ArrayList<Propuesta>();
 		
-		
 
-		String sql = String.format("SELECT * FROM %1$s.PROPUESTAS WHERE TIPO_INMUEBLE = %2$s", USUARIO, tipoInmueble);
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTAS WHERE TIPO_INMUEBLE = '%2$s' ORDER BY ID_PERSONA", USUARIO, tipoInmueble);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -524,7 +524,7 @@ public class DAOPersona {
 				+ "AND FECHA_FIN_DESHABILITADA = '%11$s'", 
 				propuesta.getTipo_inmueble(),
 				propuesta.getHotel().getId(),
-				propuesta.getHostel().getId(),
+				propuesta.getHostal().getId(),
 				propuesta.getVivienda_express().getId(),
 				propuesta.getApartamento().getId(),
 				propuesta.getVivienda_universitarias().getId(),
@@ -668,13 +668,13 @@ public class DAOPersona {
 			}
 		}
 
-		if ( Propuesta.TIPO_INMUEBLE.HOSTEL.toString().equalsIgnoreCase(tipo_inmueble) ) {
+		if ( Propuesta.TIPO_INMUEBLE.HOSTAL.toString().equalsIgnoreCase(tipo_inmueble) ) {
 			String sql = String.format("SELECT * FROM %1$s.HOSTELES WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_HOSTEL"));
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
 			ResultSet rs = prepStmt.executeQuery();
 			if (rs.next()) {
-				prop.setHostel( new Hostel(rs.getLong("ID"), rs.getString("REGISTRO_CAMARA_COMERCIO"), rs.getString("REGISTRO_SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION"), rs.getInt("HORARIO_ADMIN_INICIAL"), rs.getInt("HORARIO_ADMIN_FINAL")) );
+				prop.setHostal( new Hostal(rs.getLong("ID"), rs.getString("REGISTRO_CAMARA_COMERCIO"), rs.getString("REGISTRO_SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION"), rs.getInt("HORARIO_ADMIN_INICIAL"), rs.getInt("HORARIO_ADMIN_FINAL")) );
 			}
 		}
 

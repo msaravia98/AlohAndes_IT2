@@ -45,8 +45,8 @@ public class Reserva {
 	/**
 	 * Fecha en la que la persona empieza a hacer uso del inmueble
 	 */
-	@JsonProperty(value="fecha_inicio_estadia")
-	private String fecha_inicio_estadia;
+	@JsonProperty(value="fecha_inicio")
+	private String fecha_inicio;
 
 	/**
 	 * Duracion de la estadia en DIAS
@@ -66,17 +66,16 @@ public class Reserva {
 	@JsonProperty(value="cantidad_personas")
 	private Integer cantidad_personas;
 	
-	/**
-	 * Determina si existe una multa hacia el cliente
-	 */
-	@JsonProperty(value= "hay_multa")
-	private Boolean hayMulta;
 	
 	/**
 	 * el costo se hay multa
 	 */
-	@JsonProperty(value="valor_multa")
-	private Double valorMulta;
+	@JsonProperty(value="multa")
+	private Double multa;
+	
+	
+	@JsonProperty(value="IdColectivo")
+	private Long IdColectivo;
 	
 	/**
 	 * propuesta de la reserva
@@ -89,18 +88,6 @@ public class Reserva {
 	 */
 	@JsonProperty(value= "cliente")
 	private Cliente cliente;
-	
-	/**
-	 * Fecha en la que la persona empieza a hacer uso del inmueble
-	 */
-	@JsonProperty(value="fecha_inicio")
-	private String fecha_inicio;
-	
-	/**
-	 * el costo se hay multa
-	 */
-	@JsonProperty(value="multa")
-	private Double multa;
 
 
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -108,8 +95,6 @@ public class Reserva {
 	//----------------------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Metodo constructor de la clase Reserva
-	 * <b>post: </b> Crea la reserva con los valores que entran por parametro
 	 * @param id
 	 * @param fecha_registro
 	 * @param fecha_cancelacion
@@ -117,8 +102,10 @@ public class Reserva {
 	 * @param duracion
 	 * @param costo_total
 	 * @param cantidad_personas
-	 * @param hayMulta
 	 * @param valorMulta
+	 * @param IDColectivo
+	 * @param propuesta
+	 * @param cliente
 	 */
 	public Reserva(
 			@JsonProperty(value="id") Long id,
@@ -180,11 +167,11 @@ public class Reserva {
 	}
 
 	public String getFecha_inicio_estadia() {
-		return fecha_inicio_estadia;
+		return fecha_inicio;
 	}
 
 	public void setFecha_inicio_estadia(String fecha_inicio_estadia) {
-		this.fecha_inicio_estadia = fecha_inicio_estadia;
+		this.fecha_inicio = fecha_inicio_estadia;
 	}
 
 	/**
@@ -247,57 +234,20 @@ public class Reserva {
 		this.cliente = cliente;
 	}
 	
-	
-	
-	/**
-	 * @return the hayMulta
-	 */
-	public Boolean getHayMulta() {
-		return hayMulta;
-	}
-
-
-
-
-	/**
-	 * @param hayMulta the hayMulta to set
-	 */
-	public void setHayMulta(Boolean hayMulta) {
-		this.hayMulta = hayMulta;
-	}
-
-
-
-
-	/**
-	 * @return the valorMulta
-	 */
-	public Double getValorMulta() {
-		return valorMulta;
-	}
-
-
-
-
-	/**
-	 * @param valorMulta the valorMulta to set
-	 */
-	public void setValorMulta(Double valorMulta) {
-		this.valorMulta = valorMulta;
-	}
-
-
-
-
-	public String getFecha_inicio() {
-		return fecha_inicio;
-	}
-
-
-
-
-	public void setFecha_inicio(String fecha_inicio) {
-		this.fecha_inicio = fecha_inicio;
+	public Date getFechaFinal() throws Exception{
+		
+        DateFormat formato= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+		Date fechaInicio;
+		
+		fechaInicio = formato.parse(fecha_inicio);
+        
+		Calendar cal= Calendar.getInstance();
+		
+		cal.setTime(fechaInicio);
+		cal.add(Calendar.DAY_OF_YEAR, duracion);
+		Date fechaFin= cal.getTime();
+		
+		return fechaFin;
 	}
 
 
@@ -317,20 +267,15 @@ public class Reserva {
 
 
 
-	public Date getFechaFinal() throws Exception{
-		
-        DateFormat formato= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
-		Date fechaInicio;
-		
-		fechaInicio = formato.parse(fecha_inicio_estadia);
-        
-		Calendar cal= Calendar.getInstance();
-		
-		cal.setTime(fechaInicio);
-		cal.add(Calendar.DAY_OF_YEAR, duracion);
-		Date fechaFin= cal.getTime();
-		
-		return fechaFin;
+	public Long getIdColectivo() {
+		return IdColectivo;
+	}
+
+
+
+
+	public void setIdColectivo(Long idColectivo) {
+		IdColectivo = idColectivo;
 	}
 
 

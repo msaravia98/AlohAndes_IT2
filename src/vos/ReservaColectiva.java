@@ -48,6 +48,21 @@ public class ReservaColectiva  {
 	@JsonProperty (value = "IDPropuestas")
 	private List<Long> IDPropuestas;
 	
+	/**
+	 * 
+	 * @param idColectivo
+	 * @param idCliente
+	 * @param cantidadInmbuebles
+	 * @param serviciosDeseados
+	 * @param inicio
+	 * @param fechaRegistro
+	 * @param fechaCancelacion
+	 * @param CantidadInmuebles
+	 * @param Duracion
+	 * @param costo
+	 * @param multa
+	 * @param tipoInmueble
+	 */
 	public ReservaColectiva(
 			@JsonProperty(value="idColectivo") Long idColectivo,
 			@JsonProperty(value="idCliente") Cliente idCliente,

@@ -250,17 +250,15 @@ public class DAOPersona {
 
 		String sql = 
 				String.format(
-						"INSERT INTO %1$s.PERSONAS (ID, NOMBRE, APELLIDO, CEDULA, TIPO, NIT, ROL EMAIL) "
-								+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s', '%9$s' )", 
+						"INSERT INTO %1$s.PERSONAS (ID, NOMBRE, APELLIDO, TIPO, PAPEL, MULTA) "
+								+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s' )", 
 								USUARIO, 
 								persona.getId(), 
 								persona.getNombre(),
 								persona.getApellido(), 
-								persona.getCedula(),
 								persona.getTipo(),
-								persona.getNit(),
-								persona.getRol(),
-								persona.getEmail()
+								persona.getPapel(),
+								persona.getMulta()
 						);
 		System.out.println(sql);
 
@@ -551,15 +549,13 @@ public class DAOPersona {
 
 		StringBuilder sql = new StringBuilder();
 		sql.append(String.format("UPDATE %s.PERSONAS SET ", USUARIO));
-		sql.append(String.format("NOMBRE = '%1$s' AND APELLIDO = '%2$s' AND CEDULA = '%3$s' "
-				+ "AND TIPO = '%4$s' AND NIT = '%5$s' AND ROL = '%6$s' AND EMAIL = '%7$s'",
+		sql.append(String.format("NOMBRE = '%1$s' AND APELLIDO = '%2$s' AND TIPO = '%3$s' "
+								+ "AND PAPEL = '%4$s' AND MULTA = '%5$s'",
 				persona.getNombre(), 
 				persona.getApellido(), 
-				persona.getCedula(),
 				persona.getTipo(),
-				persona.getNit(),
-				persona.getRol(),
-				persona.getEmail()
+				persona.getPapel(),
+				persona.getMulta()
 				));
 
 		System.out.println(sql);
@@ -627,16 +623,20 @@ public class DAOPersona {
 		//Tenga en cuenta los nombres de las columnas de la Tabla en la Base de Datos 
 		//(ID, NOMBRE, APELLIDO, TIPO, CEDULA, ROL, NIT, EMAIL)
 
-		long id = resultSet.getLong("ID");
+		Long id = resultSet.getLong("ID");
 		String nombre = resultSet.getString("NOMBRE");
 		String apellido = resultSet.getString("APELLIDO");
 		String tipo = resultSet.getString("TIPO");
-		String rol = resultSet.getString("ROL");
-		String cedula = resultSet.getString("CEDULA");
-		String nit = resultSet.getString("NIT");
-		String email = resultSet.getString("EMAIL");
-
-		Persona pep = new Operador(id, nombre, apellido, tipo, rol, nit, cedula, email);
+//		String rol = resultSet.getString("ROL");
+//		String cedula = resultSet.getString("CEDULA");
+//		String nit = resultSet.getString("NIT");
+//		String email = resultSet.getString("EMAIL");
+		
+		String papel= resultSet.getString("PAPEL");
+		Integer multa= resultSet.getInt("MULTA");
+		
+		Persona pep = new Operador(id, nombre, apellido, tipo, papel, multa);
+		pep.setMulta(multa);
 
 		return pep;
 	}
@@ -684,7 +684,7 @@ public class DAOPersona {
 			recursos.add(prepStmt);
 			ResultSet rs = prepStmt.executeQuery();
 			if (rs.next()) {
-				prop.setHotel( new Hotel(rs.getLong("ID"), rs.getString("REGISTRO_CAMARA_COMERCIO"), rs.getString("REGISTRO_SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION"), rs.getInt("HORARIO_ADMIN_24H") == 0 ? false : true) );
+				prop.setHotel( new Hotel(rs.getLong("ID"), rs.getString("REGISTRO_CAMARA_COMERCIO"), rs.getString("REGISTRO_SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION")) );
 			}
 		}
 

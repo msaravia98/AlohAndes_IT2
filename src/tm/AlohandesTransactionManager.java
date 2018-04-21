@@ -579,9 +579,9 @@ public class AlohandesTransactionManager {
 		}	
 	}
 
-	
+
 	public Reserva getReservaById(Long id) throws Exception{
-		
+
 		DAOReserva dao= new DAOReserva();
 		Reserva reserva= null;
 		try 
@@ -617,16 +617,16 @@ public class AlohandesTransactionManager {
 		}
 		return reserva;
 	}
-	
+
 	/**
 	 * metodo que registra la reserva en la base de datos
 	 * @param reserva
 	 * @throws Exception
 	 */
 	public void registrarReserva(Reserva reserva) throws Exception {
-		
+
 		DAOReserva dao= new DAOReserva();
-		
+
 		try {
 			this.conn= darConexion();
 			dao.setConn(conn);
@@ -661,9 +661,9 @@ public class AlohandesTransactionManager {
 	 * @throws Exception
 	 */
 	public void cancelarReserva(Reserva reserva) throws Exception{
-		
+
 		DAOReserva dao= new DAOReserva();
-		
+
 		try
 		{
 			this.conn = darConexion();
@@ -696,9 +696,9 @@ public class AlohandesTransactionManager {
 			}
 		}
 	}
-	
+
 	public Propuesta getPropuestaById(Long id) throws Exception{
-		
+
 		DAOPersona dao= new DAOPersona();
 		Propuesta propuesta= null;
 		try 
@@ -734,15 +734,15 @@ public class AlohandesTransactionManager {
 		}
 		return propuesta;
 	}
-	
-	
+
+
 	/**
 	 * 
 	 * @param propuesta
 	 * @throws Exception
 	 */
 	public void retirarPropuesta(Propuesta propuesta) throws Exception {
-		
+
 		DAOPersona dao = new DAOPersona( );
 		try
 		{
@@ -779,12 +779,98 @@ public class AlohandesTransactionManager {
 	}
 
 
+	/**
+	 * 
+	 * @param propuesta
+	 * @param numDias
+	 * @throws Exception
+	 */
+	public void deshabilitarPropuesta(Propuesta propuesta)throws Exception {
+
+
+		DAOPersona dao= new DAOPersona();
+
+		try {
+			this.conn = darConexion();
+			dao.setConn( conn );
+			if(this.getPropuestaById(propuesta.getId()) == null)
+				throw new Exception("La propuesta con el id = " + propuesta.getId() + " no se encuentra persistido en la base de datos.");
+			else
+				dao.deshabilitarPropuesta(propuesta, propuesta.getDuracionDeshabilitada());
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param propuesta
+	 * @throws Exception
+	 */
+	public void rehabilitarPropuesta(Propuesta propuesta)throws Exception{
+		
+		DAOPersona dao= new DAOPersona();
+
+		try {
+			this.conn = darConexion();
+			dao.setConn( conn );
+			if(this.getPropuestaById(propuesta.getId()) == null)
+				throw new Exception("La propuesta con el id = " + propuesta.getId() + " no se encuentra persistido en la base de datos.");
+			else
+				dao.rehabilitarPropuesta(propuesta);
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+	}
+
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// REQUERIMIENTOS FUNCIONALES DE CONSULTA
 	//----------------------------------------------------------------------------------------------------------------------------------
 
-	
-	
+
+
 	/**
 	 * RFC 2
 	 * 
@@ -826,12 +912,12 @@ public class AlohandesTransactionManager {
 				throw exception;
 			}
 		}	
-		
+
 		return ss;
 	}
 
-	
-	
+
+
 
 
 

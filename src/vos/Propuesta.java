@@ -8,6 +8,8 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.sun.javafx.collections.NonIterableChange.GenericAddRemoveChange;
+
 import tm.BusinessLogicException;
 
 
@@ -266,10 +268,8 @@ public class Propuesta {
 		Date fechaFin= formatoConHora.parse(fechaDeshabilitacionFinal);
 		if(fechaActual.after(fechaFin))
 			throw new BusinessLogicException();
-		
-		if(fechaFin.after(fechaActual))
+		else
 			setHabilitada(true);
-		
 		
 	}
 
@@ -335,6 +335,20 @@ public class Propuesta {
 	 */
 	public void setCosto(Double costo) {
 		this.costo = costo;
+	}
+	
+	
+	public int getDuracionDeshabilitada()throws Exception{
+		
+		if(fechaDeshabilitacionInicial == null || fechaDeshabilitacionFinal == null)
+			throw new BusinessLogicException();
+		
+		DateFormat formatoConHora= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+        
+        Date inicio= formatoConHora.parse(fechaDeshabilitacionInicial);
+        Date fin= formatoConHora.parse(fechaDeshabilitacionFinal);
+        
+        return (int) ((fin.getTime()-inicio.getTime())/ 86400000);
 	}
 
 

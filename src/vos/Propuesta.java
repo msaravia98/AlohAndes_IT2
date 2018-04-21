@@ -97,19 +97,38 @@ public class Propuesta {
 	@JsonProperty(value="habilitada")
 	private Boolean habilitada;
 	
+	/**
+	 * 
+	 */
 	@JsonProperty(value="fechaDeshabilitacionInicial")
 	private String fechaDeshabilitacionInicial;
 	
+	/**
+	 * 
+	 */
 	@JsonProperty(value="fechaDeshabilitacionFinal")
 	private String fechaDeshabilitacionFinal;
-
+	
+	/**
+	 * 
+	 */
+	@JsonProperty (value="capacidad")
+	private Integer capacidad;
+	
+	/**
+	 * 
+	 */
+	@JsonProperty(value="costo")
+	private Double costo;
 
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
 
 	public Propuesta ( @JsonProperty(value="id") Long id,
-			@JsonProperty(value="id") String tipo_inmueble ) {
+			@JsonProperty(value="id") String tipo_inmueble,
+			@JsonProperty(value="capacidad") Integer capacidad,
+			@JsonProperty(value="costo") Double costo) {
 		this.id = id;
 		this.tipo_inmueble = tipo_inmueble;
 		this.apartamento = null;
@@ -119,7 +138,8 @@ public class Propuesta {
 		this.vivienda_express = null;
 		this.vivienda_universitarias = null;
 		this.seVaRetirar= false;
-		
+		this.capacidad= capacidad;
+		this.costo= costo;
 		
 		this.habilitada= true;
 		this.fechaDeshabilitacionInicial= null;
@@ -283,6 +303,38 @@ public class Propuesta {
 	 */
 	public void setFechaDeshabilitacionFinal(String fechaDeshabilitacionFinal) {
 		this.fechaDeshabilitacionFinal = fechaDeshabilitacionFinal;
+	}
+
+
+	/**
+	 * @return the capacidad
+	 */
+	public Integer getCapacidad() {
+		return capacidad;
+	}
+
+
+	/**
+	 * @param capacidad the capacidad to set
+	 */
+	public void setCapacidad(Integer capacidad) {
+		this.capacidad = capacidad;
+	}
+
+
+	/**
+	 * @return the costo
+	 */
+	public Double getCosto() {
+		return costo;
+	}
+
+
+	/**
+	 * @param costo the costo to set
+	 */
+	public void setCosto(Double costo) {
+		this.costo = costo;
 	}
 
 

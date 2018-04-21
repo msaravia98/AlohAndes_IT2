@@ -424,8 +424,10 @@ public class DAOReserva {
 
 		long id = resultSet.getLong("ID");
 		String tipo_inmueble = resultSet.getString("TIPO_INMUEBLE");
+		Integer capacidad= resultSet.getInt("CAPACIDAD");
+		Double costo= resultSet.getDouble("COSTO");
 
-		Propuesta prop = new Propuesta(id, tipo_inmueble);
+		Propuesta prop = new Propuesta(id, tipo_inmueble, capacidad, costo);
 
 		if ( Propuesta.TIPO_INMUEBLE.APARTAMENTO.toString().equalsIgnoreCase(tipo_inmueble) ) {
 			String sql = String.format("SELECT * FROM %1$s.APARTAMENTO WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_APARTAMENTO"));

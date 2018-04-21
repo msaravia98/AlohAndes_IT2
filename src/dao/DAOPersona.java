@@ -57,7 +57,7 @@ public class DAOPersona {
 	/**
 	 * Constante para indicar el usuario Oracle del estudiante
 	 */
-	public final static String USUARIO = "ISIS2304A491810";
+	public final static String USUARIO = "ISIS2304A901810";
 
 
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ public class DAOPersona {
 
 		ArrayList<Persona> operadores = new ArrayList<Persona>();
 
-		String sql = String.format("SELECT * FROM %1$s.PERSONAS WHERE ROL = 'operador'", USUARIO);
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE PAPEL = 'operador'", USUARIO);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -124,7 +124,7 @@ public class DAOPersona {
 
 		ArrayList<Persona> clientes = new ArrayList<Persona>();
 
-		String sql = String.format("SELECT * FROM %1$s.PERSONAS WHERE ROL = 'cliente'", USUARIO);
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE PAPEL = 'cliente'", USUARIO);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -148,7 +148,7 @@ public class DAOPersona {
 
 		ArrayList<Propuesta> props = new ArrayList<Propuesta>();
 
-		String sql = String.format("SELECT * FROM %1$s.PROPUESTAS", USUARIO);
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTA", USUARIO);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -169,7 +169,7 @@ public class DAOPersona {
 		
 		Propuesta propuesta = null;
 
-		String sql = String.format("SELECT * FROM %1$s.PROPUESTAS WHERE ID = %2$d", USUARIO, id); 
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTA WHERE ID = %2$d", USUARIO, id); 
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -198,7 +198,7 @@ public class DAOPersona {
 
 		ArrayList<Persona> personas = new ArrayList<Persona>();
 
-		String sql = String.format("SELECT * FROM %1$s.PERSONAS WHERE TIPO = '%2$s'", USUARIO, tipo);
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE TIPO = '%2$s'", USUARIO, tipo);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 
 		recursos.add(prepStmt);
@@ -223,7 +223,7 @@ public class DAOPersona {
 	{
 		Persona pep = null;
 
-		String sql = String.format("SELECT * FROM %1$s.PERSONAS WHERE ID = %2$d", USUARIO, id); 
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE ID = %2$d", USUARIO, id); 
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -250,8 +250,8 @@ public class DAOPersona {
 
 		String sql = 
 				String.format(
-						"INSERT INTO %1$s.PERSONAS (ID, NOMBRE, APELLIDO, TIPO, PAPEL, MULTA) "
-								+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s' )", 
+						"INSERT INTO %1$s.PERSONA (ID, NOMBRE, APELLIDO, TIPO, PAPEL, MULTA) "
+								+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', %7$s )", 
 								USUARIO, 
 								persona.getId(), 
 								persona.getNombre(),
@@ -292,21 +292,21 @@ public class DAOPersona {
 		} 
 
 		String sql =
-				String.format("INSERT INTO %1$s.PROPUESTAS(ID, ID_PERSONA, ID_HOSTEL, ID_HOTEL, ID_VIVIENDA_EXPRESS, ID_APARTAMENTO"
-						+ ", ID_VIVIENDA_UNIVERSITARIA, ID_HABITACION, SE_VA_RETIRAR, HABILITADA, FECHA_INICIO_DESHABILITADA, FECHA_FIN_DESHABILITADA)"
-						+ " VALUES ( %2$d, %3$d, %4$d, %5$d, %6$d, %7$d, %8$d, %9$d, %10$d, %11$d, %12$s, %13$s  )",
+				String.format("INSERT INTO %1$s.PROPUESTA VALUES (%2$s, '%3$s', %4$s, %5$s, %6$s, %7$s, %8$s,"
+						+ "%9$s, %10$s, %11$s, %12$s, %13$s, %14$s)", USUARIO,
 						propuesta.getId(),
+						propuesta.getTipo_inmueble(),
 						persona.getId(),
 						propuesta.getHostal().getId(),
 						propuesta.getHotel().getId(),
 						propuesta.getVivienda_express().getId(),
-						propuesta.getApartamento().getId(),
 						propuesta.getVivienda_universitarias().getId(),
+						propuesta.getApartamento().getId(),
 						propuesta.getHabitacion().getId(),
-						(propuesta.getSeVaRetirar()==false)? 0 : 1,
-						(propuesta.getHabilitada()==false)? 0 : 1,
-						propuesta.getFechaDeshabilitacionInicial(),
-						propuesta.getFechaDeshabilitacionFinal());
+						(propuesta.getSeVaRetirar() == true)? 1:0,
+						propuesta.getCapacidad(),
+						propuesta.getCosto(),
+						(propuesta.getHabilitada() == true)? 1:0);
 
 		System.out.println(sql);
 
@@ -345,7 +345,7 @@ public class DAOPersona {
 		//necesitio las reservas que tengan esa propuesta
 		ArrayList<Reserva> reservasConPropuesta = new ArrayList<>();
 		
-		String reservitas= String.format("SELECT * FROM RESERVAS WHERE ID_PROPUESTA = %2$d", USUARIO, propuesta.getId());
+		String reservitas= String.format("SELECT * FROM RESERVA WHERE ID_PROPUESTA = %2$d", USUARIO, propuesta.getId());
 		PreparedStatement prepStmt1= conn.prepareStatement(reservitas);
 		recursos.add(prepStmt1);	
 		ResultSet rs = prepStmt1.executeQuery();
@@ -366,8 +366,8 @@ public class DAOPersona {
 		if(fechaActual.after(lastDate)) {
 			propuesta.setSeVaRetirar(true);
 			StringBuilder sql = new StringBuilder();
-			sql.append(String.format("UPDATE PROPUESTAS SET ", USUARIO));
-			sql.append(String.format("SE_VA_RETIRAR = '%1$s' ", propuesta.getSeVaRetirar()));
+			sql.append(String.format("UPDATE PROPUESTA SET ", USUARIO));
+			sql.append(String.format("SE_RETIRA = %1$s ", propuesta.getSeVaRetirar()));
 			PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
 			recursos.add(prepStmt);
 			prepStmt.executeQuery();
@@ -413,7 +413,7 @@ public class DAOPersona {
 		//necesitio las reservas que tengan esa propuesta
 		ArrayList<Reserva> reservasConPropuesta = new ArrayList<>();
 		
-		String reservitas= String.format("SELECT * FROM RESERVAS WHERE ID_PROPUESTA = %2$d ORDER BY ID_PERSONA", USUARIO, propuesta.getId());
+		String reservitas= String.format("SELECT * FROM RESERVA WHERE ID_PROPUESTA = %2$d ORDER BY ID_PERSONA", USUARIO, propuesta.getId());
 		PreparedStatement prepStmt1= conn.prepareStatement(reservitas);
 		recursos.add(prepStmt1);	
 		ResultSet rs = prepStmt1.executeQuery();
@@ -517,7 +517,7 @@ public class DAOPersona {
 		ArrayList<Propuesta> props = new ArrayList<Propuesta>();
 		
 
-		String sql = String.format("SELECT * FROM %1$s.PROPUESTAS WHERE TIPO_INMUEBLE = '%2$s' ORDER BY ID_PERSONA", USUARIO, tipoInmueble);
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTA WHERE TIPO_INMUEBLE = '%2$s' ORDER BY ID_PERSONA", USUARIO, tipoInmueble);
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -548,10 +548,11 @@ public class DAOPersona {
 		
 		
 		StringBuilder sql = new StringBuilder();
-		sql.append(String.format("UPDATE PROPUESTAS SET ", USUARIO));
+		sql.append(String.format("UPDATE %1$s.PROPUESTA SET ", USUARIO));
 		sql.append(String.format("TIPO_INMUEBLE = '%1$s' AND ID_HOTEL = %2$s AND ID_HOSTAL = %3$s"
 				+ "AND ID_VIVIENDA_EXPRESS = %4$s AND ID_APARTAMENTO = %5$s AND ID_VIVIENDA_UNIVERSITARIA = %6$s"
-				+ "AND ID_HABITACION = %7$s AND SE_RETIRA = %8$s AND HABILITADA = %9$s", 
+				+ "AND ID_HABITACION = %7$s AND SE_RETIRA = %8$s AND HABILITADA = %9$s AND CAPACIDAD = %10$s AND "
+				+ "COSTO = %11$s", 
 				propuesta.getTipo_inmueble(),
 				propuesta.getHotel().getId(),
 				propuesta.getHostal().getId(),
@@ -560,7 +561,9 @@ public class DAOPersona {
 				propuesta.getVivienda_universitarias().getId(),
 				propuesta.getHabitacion().getId(),
 				(propuesta.getSeVaRetirar()==true)? 1:0,
-				(propuesta.getHabilitada()==true)? 1:0));
+				(propuesta.getHabilitada()==true)? 1:0,
+				propuesta.getCapacidad(),
+				propuesta.getCosto()));
 		PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
@@ -576,9 +579,9 @@ public class DAOPersona {
 	public void updatePersona ( Persona persona ) throws SQLException, Exception {
 
 		StringBuilder sql = new StringBuilder();
-		sql.append(String.format("UPDATE %s.PERSONAS SET ", USUARIO));
+		sql.append(String.format("UPDATE %s.PERSONA SET ", USUARIO));
 		sql.append(String.format("NOMBRE = '%1$s' AND APELLIDO = '%2$s' AND TIPO = '%3$s' "
-								+ "AND PAPEL = '%4$s' AND MULTA = '%5$s'",
+								+ "AND PAPEL = '%4$s' AND MULTA = %5$s",
 				persona.getNombre(), 
 				persona.getApellido(), 
 				persona.getTipo(),
@@ -673,8 +676,10 @@ public class DAOPersona {
 
 		Long id = resultSet.getLong("ID");
 		String tipo_inmueble = resultSet.getString("TIPO_INMUEBLE");
+		Integer capacidad= resultSet.getInt("CAPACIDAD");
+		Double costo= resultSet.getDouble("COSTO");
 
-		Propuesta prop = new Propuesta(id, tipo_inmueble);
+		Propuesta prop = new Propuesta(id, tipo_inmueble, capacidad, costo);
 
 		if ( Propuesta.TIPO_INMUEBLE.APARTAMENTO.toString().equalsIgnoreCase(tipo_inmueble) ) {
 			String sql = String.format("SELECT * FROM %1$s.APARTAMENTOS WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_APARTAMENTO"));
@@ -743,6 +748,7 @@ public class DAOPersona {
 		int habilitada= resultSet.getInt("HABLILITADA");
 		Boolean estaHabilitada= (habilitada==1)? true: false;
 		prop.setHabilitada(estaHabilitada);
+		
 		
 		return prop;
 	}

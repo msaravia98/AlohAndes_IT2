@@ -431,23 +431,40 @@ public class DAOPersona {
 
 		
 		//busco el tipo de inmueble que buscan que este disponible
-		boolean fin= false;
 		int n= propuestasDisponibles.size();
 		Propuesta propuestaCambio= null;
-		for(int i=0; i<n && !fin; i++) {
+		for(int i=0; i<n ; i++) {
 			if(propuestasDisponibles.get(i).getSeVaRetirar()== false && propuestasDisponibles.get(i).getHabilitada()== true && propuestasDisponibles.get(i) != propuesta) {
 				propuestaCambio= propuestasDisponibles.get(i);
+				break;
 			}
 		}
+		
 		
 		int nr= reservasConPropuesta.size();
 		for(int i=0; i<nr; i++) 
 			reservasConPropuesta.get(i).setPropuesta(propuestaCambio);
 		
+		ArrayList<ReservaColectiva> colectivas= new ArrayList<>();
+		
+		for(int i=0; i<nr; i++) {
+			
+			Reserva actual= reservasConPropuesta.get(i);
+			for(int j=i+1; j<nr; j++) {
+				
+				Reserva actual2= reservasConPropuesta.get(j);
+				if(actual.getCliente().getId() != actual2.getCliente().getId()) {
+					
+					colectivas.add(new ReservaColectiva(actual.getId(), actual.getCliente(), j-i, null, actual.getFecha_inicio_estadia(), actual.getFecha_registro(), actual.getFecha_cancelacion(), j-i, actual.getDuracion(), actual.getCosto_total(), actual.getMulta(), propuestaCambio.getTipo_inmueble()));
+					i=j;
+					break;
+				}
+			}
+		}
 		
 		
-		
-		dao.registrarReservaColectiva(reservasConPropuesta);//le asigno la propuesta determinada a la reserva que estaba
+		for(ReservaColectiva res: colectivas)
+			dao.registrarReservaColectiva(res);
 		
 		
 		propuesta.setFechaDeshabilitacionInicial(actualDate);		
@@ -461,7 +478,7 @@ public class DAOPersona {
 		propuesta.setFechaDeshabilitacionFinal(fechaFinal);
 		
 		updatePropuesta(propuesta);
-		
+		registrarDeshabilitada(propuesta);
 		
 	}
 	
@@ -513,15 +530,28 @@ public class DAOPersona {
 		
 	}
 	
+	
+	private void registrarDeshabilitada(Propuesta propuesta) throws SQLException {
+		
+		String sql= String.format("INSERT INTO %1$s.PROPUESTA_DESHABILITADA VALUES(%2$s, '%3$s', '%4$s')", USUARIO,
+				propuesta.getId(),
+				propuesta.getFechaDeshabilitacionInicial(),
+				propuesta.getFechaDeshabilitacionFinal());
+		
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
+		
+	}
+	
 	public void updatePropuesta(Propuesta propuesta) throws SQLException {
 		
 		
 		StringBuilder sql = new StringBuilder();
 		sql.append(String.format("UPDATE PROPUESTAS SET ", USUARIO));
-		sql.append(String.format("TIPO_INMUEBLE = '%1$s' AND ID_HOTEL = '%2$s' AND ID_HOSTEL = '%3$s'"
-				+ "AND ID_VIVIENDA_EXPRESS = '%4$s' AND ID_APARTAMENTO = '%5$s' AND ID_VIVIENDA_UNIVERSITARIA = '%6$s'"
-				+ "AND ID_HABITACION = '%7$s' AND SE_VA_RETIRAR = '%8$s' AND HABILITADA = '%9$s' AND FECHA_INICIO_DESHABILITADA = '%10$s'"
-				+ "AND FECHA_FIN_DESHABILITADA = '%11$s'", 
+		sql.append(String.format("TIPO_INMUEBLE = '%1$s' AND ID_HOTEL = %2$s AND ID_HOSTAL = %3$s"
+				+ "AND ID_VIVIENDA_EXPRESS = %4$s AND ID_APARTAMENTO = %5$s AND ID_VIVIENDA_UNIVERSITARIA = %6$s"
+				+ "AND ID_HABITACION = %7$s AND SE_RETIRA = %8$s AND HABILITADA = %9$s", 
 				propuesta.getTipo_inmueble(),
 				propuesta.getHotel().getId(),
 				propuesta.getHostal().getId(),
@@ -530,9 +560,7 @@ public class DAOPersona {
 				propuesta.getVivienda_universitarias().getId(),
 				propuesta.getHabitacion().getId(),
 				(propuesta.getSeVaRetirar()==true)? 1:0,
-				(propuesta.getHabilitada()==true)? 1:0,
-				propuesta.getFechaDeshabilitacionInicial(),
-				propuesta.getFechaDeshabilitacionFinal()));
+				(propuesta.getHabilitada()==true)? 1:0));
 		PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
@@ -643,7 +671,7 @@ public class DAOPersona {
 
 	public Propuesta convertResultSetTo_Propuesta(ResultSet resultSet) throws SQLException {
 
-		long id = resultSet.getLong("ID");
+		Long id = resultSet.getLong("ID");
 		String tipo_inmueble = resultSet.getString("TIPO_INMUEBLE");
 
 		Propuesta prop = new Propuesta(id, tipo_inmueble);

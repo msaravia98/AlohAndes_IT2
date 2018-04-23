@@ -44,11 +44,10 @@ public class DAOReserva {
 	/**
 	 * Atributo que genera la conexion a la base de datos
 	 */
-<<<<<<< HEAD
+
 	private  Connection conn;
-=======
-	private Connection conn;
->>>>>>> refs/remotes/origin/master
+
+	
 
 	/**
 	 * 
@@ -152,7 +151,6 @@ public class DAOReserva {
 	public void registrarReserva(Reserva reserva) throws SQLException, BusinessLogicException, Exception {
 
 		ArrayList<Reserva> reservasEnFecha = new ArrayList<>();
-<<<<<<< HEAD
 		if(reserva.getIdColectivo()==null)
 		{
 			Integer num = 0;
@@ -192,7 +190,7 @@ public class DAOReserva {
 				+ "%11$s,"
 				+ "%12$s)", 
 				USUARIO, //1
-				reserva.getId(), //2 
+				reserva.getId(),//2
 				reserva.getIdPropuesta(), //3
 				reserva.getIdCliente(), //4
 				reserva.getFecha_registro(),  //5
@@ -205,142 +203,14 @@ public class DAOReserva {
 				reserva.getIdColectivo());//12
 		
 		System.out.println(sql+"esta es la sentencia");
-=======
 
-		String reservas = String.format("SELECT * FROM RESERVA WHERE ID = %2$d AND FECHA_INICIO= %3$d", USUARIO, reserva.getId(), reserva.getFecha_inicio_estadia());
-		PreparedStatement prepStmt1= conn.prepareStatement(reservas);
-		recursos.add(prepStmt1);	
-		ResultSet rs = prepStmt1.executeQuery(); //consigo las reservas que hay para ese día
-
-		while(rs.next())
-			reservasEnFecha.add(convertResultSetToReserva(rs));
-
-		Cliente solicitado= reserva.getCliente();
-
-		for(Reserva res: reservasEnFecha) {
-
-			Cliente cliente= res.getCliente();
-			if(solicitado == cliente)
-				throw new BusinessLogicException("No puede hacer más reservas el mismo día");
-			//se valida que el cliente no haga más reservas un mismo dia
-		}
-
-		Propuesta propuesta= reserva.getPropuesta();
-		if(propuesta.getSeVaRetirar())
-			throw new BusinessLogicException("No se puede realizar la reserva porque la propuesta no esta disponible para más fechas");
-		//valido que la propuesta sea vigente
-
-		if(!propuesta.getHabilitada()) throw new BusinessLogicException("La propuesta está deshabilitada");
-
-		//sentencia para insertar la resrva en la base de datos
-		String sql = String.format("INSERT INTO %1$s.RESERVA (ID, ID_PROPUESTA, ID_PERSONA, FECHA_REGISTRO, FECHA_INICIO, FECHA_CANCELACION,COSTO,DURACION,PERSONAS,MULTA,ID_COLECTIVO) VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s', '%8$s', '%9$s')", 
-				USUARIO, 
-				reserva.getId(), 
-				reserva.getPropuesta().getId(),
-				solicitado.getId(),
-				reserva.getFecha_registro(),
-				reserva.getFecha_inicio_estadia(),
-				reserva.getFecha_cancelacion(),
-				reserva.getCosto_total(),
-				reserva.getDuracion(),
-				reserva.getCantidad_personas(),
-				reserva.getMulta(),
-				reserva.getIdColectivo());
->>>>>>> refs/remotes/origin/master
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery(); //se inserta la reserva
 
 	}
-<<<<<<< HEAD
-=======
-	/**
-	 * Retorna las propuestas que sirven, segun tipo de propuesta y los servicios requeridos
-	 * @param reserva Reserva Colectiva con los filtros que se desean aplicar
-	 * @return Retorna una lista con las Propuestas que cumplen los filtros dados
-	 * @throws BusinessLogicException Si se violan reglas de negocio
-	 * @throws SQLException En la ejecución de las sentencias.
-	 */
-	private List<Propuesta> propuestasQueSirven(ReservaColectiva reserva) throws BusinessLogicException, SQLException {
-
-		Integer cant = reserva.getCantidadInmuebles();
-		String tipoIn = reserva.getTipoInmueble();
-		List<Propuesta> retornar = new ArrayList<>();
-		String servs = reserva.getServiciosDeseados();
-		String[] servis = servs.split("-");
-		Integer dur = reserva.getDuracion();
-		String sentencia ="";
-
-
-		if(servis.length>0)
-		{
-			String cadServ ="(";
-			for(String servi:servis)
-			{
-				cadServ+="'"+servi+"',";
-			}
-			cadServ = cadServ.substring(0,cadServ.length()-2);
-			cadServ+=")";
-
-			sentencia = "WHERE TIPO.NOMBRE IN" + cadServ +"";
-		}
-		String sql    ="SELECT *"
-				+ "FROM PROPUESTAS PRO"
-				+ "WHERE UPPER(TIPO_INMUEBLE) =UPPER('"+tipoIn+"')"
-				+ "AND PRO.ID_"+tipoIn+""
-				+ "IN ( "
-				+ "SELECT SERV.ID_"+tipoIn+""
-				+ "FROM SERVICIO_BASICO SERV INNER JOIN TIPOS TIPO ON TIPO.ID = SERV.ID_TIPO_SERVICIO"
-				+ sentencia
-				+")"
-				+"";
-
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		ResultSet rs =prepStmt.executeQuery();
-
-		while(rs.next())
-		{
-			retornar.add(convertResultSetTo_Propuesta(rs));
-		}
-		return retornar;
-	}
-
-	public void registrarReservaColectiva(ReservaColectiva reserva) throws Exception
-	{
-		List<Propuesta> props = propuestasQueSirven(reserva);
-		Reserva nueva = null;
-		//Filtros que necesito
-		Integer cant = reserva.getCantidadInmuebles();
-		Double cost = reserva.getCosto();
-		String in = reserva.getFechaInicio();
-		String can = reserva.getFechaCancelacion();
-		String reg = reserva.getFechaRegistro();
-		Long col = reserva.getIdColectivo();
-
-		for(Integer i =0;i<cant;i++)
-		{
-			Propuesta p = props.get(i);
-			Long id = i.longValue();
-			nueva = new Reserva(id, reserva.getFechaRegistro()
-					, reserva.getFechaCancelacion()
-					, reserva.getFechaInicio()
-					, reserva.getDuracion()
-					, reserva.getCosto()
-					, reserva.getCantidadInmuebles()
-					, reserva.getMulta()
-					, reserva.getIdColectivo()
-					, p
-					, reserva.getCliente());
-			reserva.getIDReservas().add(nueva);
-			registrarReserva(nueva);
-		}
-
-
-	}
-
->>>>>>> refs/remotes/origin/master
+	
 	/**
 	 * Metodo que actualiza la informacion de la reserva en la Base de Datos que tiene el identificador dado por parametro<br/>
 	 * <b>Precondicion: </b> la conexion a sido inicializadoa <br/>  
@@ -351,11 +221,8 @@ public class DAOReserva {
 	public void cancelarReserva(Reserva reserva) throws SQLException, BusinessLogicException, Exception {
 
 		//Formateando la fecha:
-<<<<<<< HEAD
 		DateFormat formatoConHora= new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-=======
-		DateFormat formatoConHora= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
->>>>>>> refs/remotes/origin/master
+
 
 		//Fecha actual desglosada:
 		Calendar fecha = Calendar.getInstance();
@@ -369,21 +236,10 @@ public class DAOReserva {
 
 		Date fechaActual= formatoConHora.parse(actualDate);
 
-<<<<<<< HEAD
 		Reserva reserva1 = getReservaById(reserva.getId());
 
 		Date fechaDeEstadia= formatoConHora.parse(reserva1.getFecha_inicio()); // obtengo la fecha e estadia
-=======
-		//necesito la fecha de estadia
-		String darFechaEstadia = String.format("SELECT * FROM RESERVA WHERE ID = %2$d", USUARIO, reserva.getId());
-		PreparedStatement prepStmt = conn.prepareStatement(darFechaEstadia);
-		recursos.add(prepStmt);
 
-		ResultSet rs = prepStmt.executeQuery();
-		Reserva reserva1= convertResultSetToReserva(rs);
-
-		Date fechaDeEstadia= formatoConHora.parse(reserva1.getFecha_inicio_estadia()); // obtengo la fecha e estadia
->>>>>>> refs/remotes/origin/master
 
 
 
@@ -400,11 +256,9 @@ public class DAOReserva {
 			reserva.setCosto_total(valorMulta);
 			StringBuilder sql = new StringBuilder();
 			sql.append(String.format("UPDATE RESERVA SET ", USUARIO));
-<<<<<<< HEAD
+
 			sql.append(String.format("FECHA_CANCELACION ",fechaActual.toString()," AND MULTA",reserva.getMulta()));
-=======
-			sql.append(String.format("FECHA_CANCELACION = '%1$s' AND MULTA = '%2$s'", fechaActual.toString(), reserva.getMulta()));
->>>>>>> refs/remotes/origin/master
+
 		}else if(fechaActual.after(fechaMaxima) && fechaActual.before(fechaDeEstadia)){
 			//segunda regla de negocio, si se reserva despues de la fecha maxima y antes de la fecha de inicio de la estadia se cobra el 30%
 			double valorMulta= reserva.getCosto_total();
@@ -422,7 +276,7 @@ public class DAOReserva {
 			sql.append(String.format("UPDATE RESERVA SET ", USUARIO));
 			sql.append(String.format("FECHA_CANCELACION = '%1$s' MULTA = '%2$s'", fechaActual.toString(),reserva.getMulta()));
 		}
-<<<<<<< HEAD
+
 	}
 	
 	//-----------------------------------------------------------------------------------------
@@ -450,29 +304,7 @@ public class DAOReserva {
 		}
 		return res;
 	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 * @throws SQLException
-	 * @throws Exception
-	 */
-	public List<Reserva> getReservaByIdColectivo(Long id) throws SQLException, Exception {
-		List<Reserva> reserva = new ArrayList<>();
 
-		String sql = String.format("SELECT * FROM %1$s.RESERVA WHERE ID_COLECTIVO = %2$d", USUARIO, id); 
-
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		ResultSet rs = prepStmt.executeQuery();
-
-		if(rs.next()) {
-			reserva.add(convertResultSetToReserva(rs));
-		}
-
-		return reserva;
-	}
 	public void registrarReservaColectiva(ReservaColectiva reserva) throws Exception
 	{
 		List<Propuesta> props = propuestasQueSirven(reserva);
@@ -508,23 +340,8 @@ public class DAOReserva {
 	}
 
 
-	/**
-	 * Metodo que actualiza la informacion de la reserva en la Base de Datos que tiene el identificador dado por parametro<br/>
-	 * <b>Precondicion: </b> la conexion a sido inicializadoa <br/>  
-	 * @param resrva Reserva que desea actualizar a la Base de Datos
-	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
-	 * @throws BusinessLogicException Si se genera un error dentro del metodo.
-	 */
-	public void cancelarReservaColectiva(List<Reserva> reserva) throws SQLException, BusinessLogicException, Exception {
-		Double multa = 0.0;
-		for(Reserva re:reserva)
-		{
-			cancelarReserva(re);
-			multa+=re.getMulta();
-			re.setMulta(multa);
-		}
-		
-	}
+
+	
 	/**
 	 * Retorna las propuestas que sirven, segun tipo de propuesta y los servicios requeridos
 	 * @param reserva Reserva Colectiva con los filtros que se desean aplicar
@@ -583,31 +400,7 @@ public class DAOReserva {
 
 
 
-	public static Reserva convertResultSetToReserva(ResultSet resultSet) throws SQLException {
-=======
-
-		//		String[] particion= fechaDeRegistroAQuedarse.toString().split("-");
-		//		int dia1= Integer.parseInt(particion[2]);
-		//		
-		//		
-		//		Calendar calendario= Calendar.getInstance();
-		//		calendario.se
-		//		int diaMax;
-		//		int mesMax;
-		//		int anioMax;
-		//		
-		//		if()
-
-
-
-
-		//		String sql = String.format("DELETE FROM RECURSOS WHERE ID = %2$d", USUARIO, reserva.getId());
-		//		
-		//		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		//		recursos.add(prepStmt);
-		//		prepStmt.executeQuery();
-	}
-
+	
 	/**
 	 * Metodo que actualiza la informacion de la reserva en la Base de Datos que tiene el identificador dado por parametro<br/>
 	 * <b>Precondicion: </b> la conexion a sido inicializadoa <br/>  
@@ -615,25 +408,24 @@ public class DAOReserva {
 	 * @throws SQLException SQLException Genera excepcion si hay error en la conexion o en la consulta SQL
 	 * @throws BusinessLogicException Si se genera un error dentro del metodo.
 	 */
-	public void cancelarReservaColectiva(ReservaColectiva reserva) throws SQLException, BusinessLogicException, Exception {
-		List<Reserva> res = darReservasColectivasID(reserva);
+	public void cancelarReservaColectiva(Long id) throws SQLException, BusinessLogicException, Exception {
+		List<Reserva> res = darReservasColectivasID(id);
 		Double multa = 0.0;
 		for(Reserva re:res)
 		{
 			cancelarReserva(re);
 			multa+=re.getMulta();
+			re.setMulta(multa);
 		}
-		reserva.setMulta(multa);
 	}
 
-	private List<Reserva> darReservasColectivasID(ReservaColectiva re) throws SQLException
+	private List<Reserva> darReservasColectivasID(Long id) throws SQLException
 	{
-		Long id = re.getIdColectivo();
 		List<Reserva> retornar = new ArrayList<>();
 		
 		String sql    ="SELECT *"
 				+ "FROM RESERVAS"
-				+ "WHERE ID_COLECTIVO ="+re.getIdColectivo();
+				+ "WHERE ID_COLECTIVO ="+id;
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -650,17 +442,13 @@ public class DAOReserva {
 
 
 	public Reserva convertResultSetToReserva(ResultSet resultSet) throws SQLException {
->>>>>>> refs/remotes/origin/master
+
 
 
 		Long id = resultSet.getLong("ID");
 		Long idPropuesta= resultSet.getLong("ID_PROPUESTA");
 		Long idCliente= resultSet.getLong("ID_PERSONA");
-<<<<<<< HEAD
 		Long IdColectivo = resultSet.getLong("ID_COLECTIVO");
-		
-=======
->>>>>>> refs/remotes/origin/master
 		String fecha_registro = resultSet.getString("FECHA_REGISTRO");
 		String fecha_inicio = resultSet.getString("FECHA_INICIO");
 		String fecha_cancelacion = resultSet.getString("FECHA_CANCELACION");
@@ -668,7 +456,7 @@ public class DAOReserva {
 		Integer duracion= resultSet.getInt("DURACION");
 		Integer personas= resultSet.getInt("PERSONAS");
 		Double valorMulta= resultSet.getDouble("MULTA");
-<<<<<<< HEAD
+
 		
 		Reserva retornar = new Reserva(id,
 				fecha_registro,
@@ -689,8 +477,10 @@ public class DAOReserva {
 
 		long id = resultSet.getLong("ID");
 		String tipo_inmueble = resultSet.getString("TIPO_INMUEBLE");
-
-		Propuesta prop = new Propuesta(id, tipo_inmueble);
+		int capacidad= resultSet.getInt("CAPACIDAD");
+		double costo= resultSet.getDouble("COSTO");
+		
+		Propuesta prop = new Propuesta(id, tipo_inmueble, capacidad, costo);
 
 		if ( Propuesta.TIPO_INMUEBLE.APARTAMENTO.toString().equalsIgnoreCase(tipo_inmueble) ) {
 			String sql = String.format("SELECT * FROM %1$s.APARTAMENTO WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_APARTAMENTO"));
@@ -755,119 +545,17 @@ public class DAOReserva {
 		int retiro= resultSet.getInt("SE_RETIRA");
 		Boolean seVaRetirar= (retiro == 1)? true: false;
 		prop.setSeVaRetirar(seVaRetirar);
-	/**
+	
 		
-		int habilitada= resultSet.getInt("HABLILITADA");
-		Boolean estaHabilitada= (habilitada==1)? true: false;
-		prop.setHabilitada(estaHabilitada);*/
+//		int habilitada= resultSet.getInt("HABLILITADA");
+//		Boolean estaHabilitada= (habilitada==1)? true: false;
+//		prop.setHabilitada(estaHabilitada);
 		
 		return prop;
 	}
 
-=======
-		Long IdColectivo = resultSet.getLong("ID_COLECTIVO");
 
-		String personita = String.format("SELECT * FROM PERSONA WHERE ID = %2$d", USUARIO, idCliente);
-		PreparedStatement prepStmt = conn.prepareStatement(personita);
-		ResultSet rs2= prepStmt.executeQuery();
-
-		Persona personaRequerida= persona.convertResultSetTo_Persona(rs2);
-		Cliente cliente= new Cliente(personaRequerida.getId(), personaRequerida.getNombre()
-				, personaRequerida.getApellido(), personaRequerida.getTipo()
-				, personaRequerida.getPapel(),
-				personaRequerida.getMulta());
-
-		String propuestica = String.format("SELECT * FROM PROPUESTA WHERE ID = %2$d", USUARIO, idPropuesta);
-		PreparedStatement prepStmt2 = conn.prepareStatement(propuestica);
-		ResultSet rs3= prepStmt2.executeQuery();
-		Propuesta propuesta= persona.convertResultSetTo_Propuesta(rs3);
-
-		Reserva reserva= new Reserva(id, fecha_registro, fecha_cancelacion, fecha_inicio, duracion, costo, personas, valorMulta, IdColectivo,propuesta, cliente);
-
-		return reserva;
-	}
-
-	public Propuesta convertResultSetTo_Propuesta(ResultSet resultSet) throws SQLException {
-
-		long id = resultSet.getLong("ID");
-		String tipo_inmueble = resultSet.getString("TIPO_INMUEBLE");
-		Integer capacidad= resultSet.getInt("CAPACIDAD");
-		Double costo= resultSet.getDouble("COSTO");
-
-		Propuesta prop = new Propuesta(id, tipo_inmueble, capacidad, costo);
-
-		if ( Propuesta.TIPO_INMUEBLE.APARTAMENTO.toString().equalsIgnoreCase(tipo_inmueble) ) {
-			String sql = String.format("SELECT * FROM %1$s.APARTAMENTO WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_APARTAMENTO"));
-			PreparedStatement prepStmt = conn.prepareStatement(sql);
-			recursos.add(prepStmt);
-			ResultSet rs = prepStmt.executeQuery();
-			if (rs.next()) {
-				prop.setApartamento(new Apartamento(rs.getLong("ID"), (rs.getInt("AMOBLADO") == 1 )? true : false  , rs.getDouble("COSTO_ADMINISTRACION")));
-			}
-		} 
-
-		if ( Propuesta.TIPO_INMUEBLE.HABITACION.toString().equalsIgnoreCase(tipo_inmueble) ) {
-			String sql = String.format("SELECT * FROM %1$s.HABITACION WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_HABITACION"));
-			PreparedStatement prepStmt = conn.prepareStatement(sql);
-			recursos.add(prepStmt);
-			ResultSet rs = prepStmt.executeQuery();
-			if (rs.next()) {
-				prop.setHabitacion( new Habitacion(rs.getLong("ID"), (rs.getInt("ESPECIAL")==1)? true:false	, rs.getString("TIPO_HABITACION")) );
-			}
-		}
-
-		if ( Propuesta.TIPO_INMUEBLE.HOSTAL.toString().equalsIgnoreCase(tipo_inmueble) ) {
-			String sql = String.format("SELECT * FROM %1$s.HOSTAL WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_HOSTAL"));
-			PreparedStatement prepStmt = conn.prepareStatement(sql);
-			recursos.add(prepStmt);
-			ResultSet rs = prepStmt.executeQuery();
-			if (rs.next()) {
-				prop.setHostal( new Hostal(rs.getLong("ID"), rs.getString("CAMARA_COMERCIO"), rs.getString("SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION"), rs.getInt("APERTURA"), rs.getInt("CIERRE")) );
-			}
-		}
-
-		if ( Propuesta.TIPO_INMUEBLE.HOTEL.toString().equalsIgnoreCase(tipo_inmueble) ) {
-			String sql = String.format("SELECT * FROM %1$s.HOTEL WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_HOTEL"));
-			PreparedStatement prepStmt = conn.prepareStatement(sql);
-			recursos.add(prepStmt);
-			ResultSet rs = prepStmt.executeQuery();
-			if (rs.next()) {
-				prop.setHotel( new Hotel(rs.getLong("ID"), rs.getString("CAMARA_COMERCIO"), rs.getString("SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION") ));
-			}
-		}
-
-		if ( Propuesta.TIPO_INMUEBLE.VIVIENDA_EXPRESS.toString().equalsIgnoreCase(tipo_inmueble) ) {
-			String sql = String.format("SELECT * FROM %1$s.VIVIENDA_EXPRESS WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_VIVIENDA_EXPRESS"));
-			PreparedStatement prepStmt = conn.prepareStatement(sql);
-			recursos.add(prepStmt);
-			ResultSet rs = prepStmt.executeQuery();
-			if (rs.next()) {
-				prop.setVivienda_express( new ViviendaExpress(rs.getLong("ID"), rs.getString("MENAJE"), rs.getString("UBICACION")) );
-			}
-		}
-
-		if ( Propuesta.TIPO_INMUEBLE.VIVIENDA_UNIVERSITARIA.toString().equalsIgnoreCase(tipo_inmueble) ) {
-			String sql = String.format("SELECT * FROM %1$s.VIVIENDA_UNIVERSITARIA WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_VIVIENDA_UNIVERSITARIA"));
-			PreparedStatement prepStmt = conn.prepareStatement(sql);
-			recursos.add(prepStmt);
-			ResultSet rs = prepStmt.executeQuery();
-			if (rs.next()) {
-				prop.setVivienda_universitarias( new ViviendaUniversitaria(rs.getLong("ID"), rs.getString("UBICACION"), rs.getString("CAPACIDAD"), rs.getString("MENAJE"), rs.getString("DESCRIPCION"), rs.getString("TIPO"), rs.getInt("MENSUAL") == 0 ? false : true) );
-			}
-		}
-
-		int retiro= resultSet.getInt("SE_RETIRA");
-		Boolean seVaRetirar= (retiro == 1)? true: false;
-		prop.setSeVaRetirar(seVaRetirar);
-
-		int habilitada= resultSet.getInt("HABLILITADA");
-		Boolean estaHabilitada= (habilitada==1)? true: false;
-		prop.setHabilitada(estaHabilitada);
-
-		return prop;
-	}
-
->>>>>>> refs/remotes/origin/master
+	
 
 
 	/**

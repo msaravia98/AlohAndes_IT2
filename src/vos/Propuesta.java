@@ -66,11 +66,8 @@ public class Propuesta {
 	/**
 	 * Representa el tipo de inmuble hostel de la propuesta
 	 */
-<<<<<<< HEAD
+
 	@JsonProperty(value="hostal")
-=======
-	@JsonProperty(value="hostel")
->>>>>>> refs/remotes/origin/master
 	private Hostal hostal;
 	
 	/**
@@ -101,7 +98,7 @@ public class Propuesta {
 	private Integer capacidad;
 	
 	@JsonProperty(value="costo")
-	private Integer costo;
+	private Double costo;
 	
 	/**
 	 * 
@@ -121,17 +118,8 @@ public class Propuesta {
 	@JsonProperty(value="fechaDeshabilitacionFinal")
 	private String fechaDeshabilitacionFinal;
 	
-	/**
-	 * 
-	 */
-	@JsonProperty (value="capacidad")
-	private Integer capacidad;
-	
-	/**
-	 * 
-	 */
-	@JsonProperty(value="costo")
-	private Double costo;
+
+
 
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
@@ -149,15 +137,7 @@ public class Propuesta {
 		this.hotel = null;
 		this.vivienda_express = null;
 		this.vivienda_universitarias = null;
-<<<<<<< HEAD
 		this.seRetira= false;
-		
-=======
-		this.seVaRetirar= false;
-		this.capacidad= capacidad;
-		this.costo= costo;
->>>>>>> refs/remotes/origin/master
-		
 		this.habilitada= true;
 		this.fechaDeshabilitacionInicial= null;
 		this.fechaDeshabilitacionFinal= null;
@@ -197,13 +177,10 @@ public class Propuesta {
 		return hostal;
 	}
 
-<<<<<<< HEAD
-	public void setHostal(Hostal hostel) {
-		this.hostal = hostel;
-=======
+
+
 	public void setHostal(Hostal hostal) {
 		this.hostal = hostal;
->>>>>>> refs/remotes/origin/master
 	}
 
 	public Hotel getHotel() {

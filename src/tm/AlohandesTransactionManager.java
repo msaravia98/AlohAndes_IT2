@@ -698,7 +698,7 @@ public class AlohandesTransactionManager {
 		}
 		return reserva;
 	}
-<<<<<<< HEAD
+
 public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 		
 		DAOReserva dao= new DAOReserva();
@@ -736,9 +736,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 		}
 		return reservas;
 	}
-=======
 
->>>>>>> refs/remotes/origin/master
 	/**
 	 * metodo que registra la reserva en la base de datos
 	 * @param reserva
@@ -853,7 +851,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 			}
 		}
 	}
-<<<<<<< HEAD
+
 	/**
 	 * 
 	 * @param reserva
@@ -861,8 +859,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 	 */
 	public void cancelarReservaColectiva(Long reservaId) throws Exception{
 		
-		DAOReserva dao= new DAOReserva();
-		List<Reserva> reserva = new ArrayList<>();
+		DAOReserva dao= new DAOReserva();;
 		
 		try
 		{
@@ -871,11 +868,8 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 			if ( this.getReservaByIdColectivo(reservaId)== null )
 				throw new Exception("Las reservas con el ID colectivo = " + reservaId + " no se encuentran persistidas en la base de datos.");
 			else
-				
-				 
-				reserva = dao.getReservaByIdColectivo(reservaId);
 
-				dao.cancelarReservaColectiva(reserva);
+				dao.cancelarReservaColectiva(reservaId);
 				
 		}catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -901,9 +895,6 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 			}
 		}
 	}
-=======
-
->>>>>>> refs/remotes/origin/master
 	public Propuesta getPropuestaById(Long id) throws Exception{
 
 		DAOPersona dao= new DAOPersona();

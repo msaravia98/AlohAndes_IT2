@@ -3,6 +3,12 @@ package vos;
 
 
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
@@ -39,11 +45,7 @@ public class Reserva {
 	/**
 	 * Fecha en la que la persona empieza a hacer uso del inmueble
 	 */
-<<<<<<< HEAD
 	@JsonProperty(value = "fecha_inicio")
-=======
-	@JsonProperty(value="fecha_inicio")
->>>>>>> refs/remotes/origin/master
 	private String fecha_inicio;
 
 	/**
@@ -64,7 +66,6 @@ public class Reserva {
 	 */
 	@JsonProperty(value = "cantidad_personas")
 	private Integer cantidad_personas;
-<<<<<<< HEAD
 
 	/**
 	 * el costo se hay multa
@@ -75,20 +76,6 @@ public class Reserva {
 	@JsonProperty(value = "idColectivo")
 	private Long idColectivo;
 
-=======
-	
-	
-	/**
-	 * el costo se hay multa
-	 */
-	@JsonProperty(value="multa")
-	private Double multa;
-	
-	
-	@JsonProperty(value="IdColectivo")
-	private Long IdColectivo;
-	
->>>>>>> refs/remotes/origin/master
 	/**
 	 * propuesta de la reserva
 	 */
@@ -124,7 +111,6 @@ public class Reserva {
 	 * @param propuesta
 	 * @param cliente
 	 */
-<<<<<<< HEAD
 	public Reserva(@JsonProperty(value = "id") Long id, 
 			@JsonProperty(value = "fecha_registro") String fecha_registro,
 			@JsonProperty(value = "fecha_cancelacion") String fecha_cancelacion,
@@ -146,37 +132,9 @@ public class Reserva {
 		this.multa = valorMulta;
 		this.idColectivo = idColectivo;
 		this.idPropuesta = idPropuesta;
-		this.idCliente = idCliente;
-=======
-	public Reserva(
-			@JsonProperty(value="id") Long id,
-			@JsonProperty(value="fecha_registro") String fecha_registro,
-			@JsonProperty(value="fecha_cancelacion") String fecha_cancelacion,
-			@JsonProperty(value="fecha_inicio_estadia") String fecha_inicio_estadia,
-			@JsonProperty(value="duracion") Integer duracion,
-			@JsonProperty(value="costo_total") Double costo_total,
-			@JsonProperty(value="cantidad_personas") Integer cantidad_personas,
-			@JsonProperty(value="valorMulta") Double valorMulta,
-			@JsonProperty(value="IDColectivo") Long IDColectivo,
-			@JsonProperty(value= "propuesta") Propuesta propuesta,
-			@JsonProperty(value= "cliente") Cliente cliente) {
-		this.id = id;
-		this.fecha_registro = fecha_registro;
-		this.fecha_cancelacion = fecha_cancelacion;
-		this.fecha_inicio = fecha_inicio_estadia;
-		this.duracion = duracion;
-		this.costo_total = costo_total;
-		this.cantidad_personas = cantidad_personas;
-		this.multa= valorMulta;
-		//TODO inizialicar propuesta y cliente
-		
-		this.propuesta= propuesta;
-		this.cliente=cliente;
-		
-	}
->>>>>>> refs/remotes/origin/master
+		this.idCliente = idCliente;}
 
-	}
+
 
 	// ----------------------------------------------------------------------------------------------------------------------------------
 	// METODOS DE LA CLASE
@@ -189,7 +147,7 @@ public class Reserva {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public String getFecha_inicio() {
 		return fecha_inicio;
 	}
@@ -214,9 +172,7 @@ public class Reserva {
 		this.fecha_cancelacion = fecha_cancelacion;
 	}
 
-<<<<<<< HEAD
 
-=======
 	public String getFecha_inicio_estadia() {
 		return fecha_inicio;
 	}
@@ -224,7 +180,6 @@ public class Reserva {
 	public void setFecha_inicio_estadia(String fecha_inicio_estadia) {
 		this.fecha_inicio = fecha_inicio_estadia;
 	}
->>>>>>> refs/remotes/origin/master
 
 	/**
 	 * EN DIAS
@@ -260,7 +215,7 @@ public class Reserva {
 		this.cantidad_personas = cantidad_personas;
 	}
 
-	
+
 
 	public Long getIdPropuesta() {
 		return idPropuesta;
@@ -273,7 +228,7 @@ public class Reserva {
 	public Long getIdCliente() {
 		return idCliente;
 	}
-<<<<<<< HEAD
+
 
 	public void setIdCliente(Long idCliente) {
 		this.idCliente = idCliente;
@@ -289,55 +244,25 @@ public class Reserva {
 
 	public Long getIdColectivo() {
 		return idColectivo;
-=======
-	
-	public Date getFechaFinal() throws Exception{
-		
-        DateFormat formato= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
-		Date fechaInicio;
-		
-		fechaInicio = formato.parse(fecha_inicio);
-        
-		Calendar cal= Calendar.getInstance();
-		
-		cal.setTime(fechaInicio);
-		cal.add(Calendar.DAY_OF_YEAR, duracion);
-		Date fechaFin= cal.getTime();
-		
-		return fechaFin;
-	}
+		}
 
-
-
-
-	public Double getMulta() {
-		return multa;
-	}
-
-
-
-
-	public void setMulta(Double multa) {
-		this.multa = multa;
-	}
-
-
-
-
-	public Long getIdColectivo() {
-		return IdColectivo;
-	}
-
-
-
-
-	public void setIdColectivo(Long idColectivo) {
-		IdColectivo = idColectivo;
->>>>>>> refs/remotes/origin/master
-	}
 
 	public void setIdColectivo(Long idColectivo) {
 		this.idColectivo = idColectivo;
+	}
+	
+	public Date getFechaFinal() throws ParseException {
+		
+		Calendar cal= Calendar.getInstance();
+        DateFormat formatoConHora= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+		
+		Date inicio= formatoConHora.parse(fecha_inicio);
+		
+		cal.setTime(inicio);
+		cal.add(Calendar.DAY_OF_YEAR, duracion);
+		Date fechaMaxima= cal.getTime();
+		return fechaMaxima;
+
 	}
 
 }

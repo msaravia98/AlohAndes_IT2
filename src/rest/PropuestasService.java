@@ -113,6 +113,43 @@ public class PropuestasService {
 			return Response.status( 500 ).entity(doErrorMessage(e)).build();
 		}
 	}
+	
+	/**
+	 * 
+	 * @param propuesta
+	 * @return
+	 */
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deshabilitarPropuesta(Propuesta propuesta) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			tm.deshabilitarPropuesta(propuesta);
+			return Response.status( 200 ).entity(propuesta).build();
+		}catch (Exception e) {
+			return Response.status( 500 ).entity(doErrorMessage(e)).build();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param propuesta
+	 * @return
+	 */
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response rehabilitarPropuesta(Propuesta propuesta) {
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			tm.rehabilitarPropuesta(propuesta);
+			return Response.status( 200 ).entity(propuesta).build();
+		}catch (Exception e) {
+			return Response.status( 500 ).entity(doErrorMessage(e)).build();
+		}
+	}
 
 	
 

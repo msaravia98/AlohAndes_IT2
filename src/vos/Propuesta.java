@@ -8,6 +8,8 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+import com.sun.javafx.collections.NonIterableChange.GenericAddRemoveChange;
+
 import tm.BusinessLogicException;
 
 
@@ -64,7 +66,11 @@ public class Propuesta {
 	/**
 	 * Representa el tipo de inmuble hostel de la propuesta
 	 */
+<<<<<<< HEAD
 	@JsonProperty(value="hostal")
+=======
+	@JsonProperty(value="hostel")
+>>>>>>> refs/remotes/origin/master
 	private Hostal hostal;
 	
 	/**
@@ -103,19 +109,38 @@ public class Propuesta {
 	@JsonProperty(value="habilitada")
 	private Boolean habilitada;
 	
+	/**
+	 * 
+	 */
 	@JsonProperty(value="fechaDeshabilitacionInicial")
 	private String fechaDeshabilitacionInicial;
 	
+	/**
+	 * 
+	 */
 	@JsonProperty(value="fechaDeshabilitacionFinal")
 	private String fechaDeshabilitacionFinal;
-
+	
+	/**
+	 * 
+	 */
+	@JsonProperty (value="capacidad")
+	private Integer capacidad;
+	
+	/**
+	 * 
+	 */
+	@JsonProperty(value="costo")
+	private Double costo;
 
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// METODO CONSTRUCTOR
 	//----------------------------------------------------------------------------------------------------------------------------------
 
 	public Propuesta ( @JsonProperty(value="id") Long id,
-			@JsonProperty(value="id") String tipo_inmueble ) {
+			@JsonProperty(value="id") String tipo_inmueble,
+			@JsonProperty(value="capacidad") Integer capacidad,
+			@JsonProperty(value="costo") Double costo) {
 		this.id = id;
 		this.tipo_inmueble = tipo_inmueble;
 		this.apartamento = null;
@@ -124,8 +149,14 @@ public class Propuesta {
 		this.hotel = null;
 		this.vivienda_express = null;
 		this.vivienda_universitarias = null;
+<<<<<<< HEAD
 		this.seRetira= false;
 		
+=======
+		this.seVaRetirar= false;
+		this.capacidad= capacidad;
+		this.costo= costo;
+>>>>>>> refs/remotes/origin/master
 		
 		this.habilitada= true;
 		this.fechaDeshabilitacionInicial= null;
@@ -166,8 +197,13 @@ public class Propuesta {
 		return hostal;
 	}
 
+<<<<<<< HEAD
 	public void setHostal(Hostal hostel) {
 		this.hostal = hostel;
+=======
+	public void setHostal(Hostal hostal) {
+		this.hostal = hostal;
+>>>>>>> refs/remotes/origin/master
 	}
 
 	public Hotel getHotel() {
@@ -252,10 +288,8 @@ public class Propuesta {
 		Date fechaFin= formatoConHora.parse(fechaDeshabilitacionFinal);
 		if(fechaActual.after(fechaFin))
 			throw new BusinessLogicException();
-		
-		if(fechaFin.after(fechaActual))
+		else
 			setHabilitada(true);
-		
 		
 	}
 
@@ -289,6 +323,52 @@ public class Propuesta {
 	 */
 	public void setFechaDeshabilitacionFinal(String fechaDeshabilitacionFinal) {
 		this.fechaDeshabilitacionFinal = fechaDeshabilitacionFinal;
+	}
+
+
+	/**
+	 * @return the capacidad
+	 */
+	public Integer getCapacidad() {
+		return capacidad;
+	}
+
+
+	/**
+	 * @param capacidad the capacidad to set
+	 */
+	public void setCapacidad(Integer capacidad) {
+		this.capacidad = capacidad;
+	}
+
+
+	/**
+	 * @return the costo
+	 */
+	public Double getCosto() {
+		return costo;
+	}
+
+
+	/**
+	 * @param costo the costo to set
+	 */
+	public void setCosto(Double costo) {
+		this.costo = costo;
+	}
+	
+	
+	public int getDuracionDeshabilitada()throws Exception{
+		
+		if(fechaDeshabilitacionInicial == null || fechaDeshabilitacionFinal == null)
+			throw new BusinessLogicException();
+		
+		DateFormat formatoConHora= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+        
+        Date inicio= formatoConHora.parse(fechaDeshabilitacionInicial);
+        Date fin= formatoConHora.parse(fechaDeshabilitacionFinal);
+        
+        return (int) ((fin.getTime()-inicio.getTime())/ 86400000);
 	}
 
 

@@ -10,8 +10,15 @@ public class ReservaColectiva  {
 	private Long IdColectivo;
 	
 	@JsonProperty (value = "cliente")
+<<<<<<< HEAD
 	private Long cliente;
 	
+=======
+	private Cliente cliente;
+	
+	@JsonProperty (value = "CantidadInmuebles")
+	private Integer CantidadInmuebles;
+>>>>>>> refs/remotes/origin/master
 	
 	@JsonProperty (value = "serviciosDeseados")
 	private String serviciosDeseados;
@@ -46,16 +53,43 @@ public class ReservaColectiva  {
 	@JsonProperty (value = "IDPropuestas")
 	private List<Long> IDPropuestas;
 	
+<<<<<<< HEAD
 	public ReservaColectiva(
 			@JsonProperty(value="idColectivo") Long idColectivo,
 			@JsonProperty(value="idCliente") Long idCliente,
+=======
+	/**
+	 * 
+	 * @param idColectivo
+	 * @param idCliente
+	 * @param cantidadInmbuebles
+	 * @param serviciosDeseados
+	 * @param inicio
+	 * @param fechaRegistro
+	 * @param fechaCancelacion
+	 * @param CantidadInmuebles
+	 * @param Duracion
+	 * @param costo
+	 * @param multa
+	 * @param tipoInmueble
+	 */
+	public ReservaColectiva(
+			@JsonProperty(value="idColectivo") Long idColectivo,
+			@JsonProperty(value="idCliente") Cliente idCliente,
+>>>>>>> refs/remotes/origin/master
 			@JsonProperty(value="cantidadInmuebles") Integer cantidadInmbuebles,
 			@JsonProperty(value="serviciosDeseados") String serviciosDeseados,
 			@JsonProperty(value="fechaInicio") String inicio,
 			@JsonProperty(value="fechaRegistro") String fechaRegistro,
 			@JsonProperty(value="fechaCancelacion") String fechaCancelacion,
+<<<<<<< HEAD
 			@JsonProperty(value="Duracion") Integer Duracion,
 			@JsonProperty(value= "Costo") Double costo,
+=======
+			@JsonProperty(value="CantidadInmuebles")  Integer CantidadInmuebles ,
+			@JsonProperty(value="Duracion") Integer Duracion,
+			@JsonProperty(value= "costo") Double costo,
+>>>>>>> refs/remotes/origin/master
 			@JsonProperty(value="multa")Double multa,
 			@JsonProperty(value= "tipoInmueble") String tipoInmueble) {
 		
@@ -66,7 +100,11 @@ public class ReservaColectiva  {
 		this.fechaInicio = inicio;
 		this.fechaRegistro = fechaRegistro;
 		this.fechaCancelacion = fechaCancelacion;
+<<<<<<< HEAD
 		this.cantidadInmuebles = cantidadInmuebles;
+=======
+		this.CantidadInmuebles = CantidadInmuebles;
+>>>>>>> refs/remotes/origin/master
 		this.Duracion = Duracion;
 		this.Costo = costo;
 		this.Multa= multa;
@@ -97,20 +135,36 @@ public class ReservaColectiva  {
 		IdColectivo = idColectivo;
 	}
 
+<<<<<<< HEAD
 	public Long getCliente() {
 		return this.cliente;
 	}
 
 	public void setIdCliente(Long idCliente) {
+=======
+	public Cliente getCliente() {
+		return this.cliente;
+	}
+
+	public void setIdCliente(Cliente idCliente) {
+>>>>>>> refs/remotes/origin/master
 		this.cliente = idCliente;
 	}
 
 	public Integer getCantidadInmuebles() {
+<<<<<<< HEAD
 		return cantidadInmuebles;
 	}
 
 	public void setCantidadInmuebles(Integer cantidadInmuebles) {
 		cantidadInmuebles = cantidadInmuebles;
+=======
+		return CantidadInmuebles;
+	}
+
+	public void setCantidadInmuebles(Integer cantidadInmuebles) {
+		CantidadInmuebles = cantidadInmuebles;
+>>>>>>> refs/remotes/origin/master
 	}
 
 	public String getServiciosDeseados() {

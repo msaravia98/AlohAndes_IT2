@@ -39,7 +39,11 @@ public class Reserva {
 	/**
 	 * Fecha en la que la persona empieza a hacer uso del inmueble
 	 */
+<<<<<<< HEAD
 	@JsonProperty(value = "fecha_inicio")
+=======
+	@JsonProperty(value="fecha_inicio")
+>>>>>>> refs/remotes/origin/master
 	private String fecha_inicio;
 
 	/**
@@ -60,6 +64,7 @@ public class Reserva {
 	 */
 	@JsonProperty(value = "cantidad_personas")
 	private Integer cantidad_personas;
+<<<<<<< HEAD
 
 	/**
 	 * el costo se hay multa
@@ -70,6 +75,20 @@ public class Reserva {
 	@JsonProperty(value = "idColectivo")
 	private Long idColectivo;
 
+=======
+	
+	
+	/**
+	 * el costo se hay multa
+	 */
+	@JsonProperty(value="multa")
+	private Double multa;
+	
+	
+	@JsonProperty(value="IdColectivo")
+	private Long IdColectivo;
+	
+>>>>>>> refs/remotes/origin/master
 	/**
 	 * propuesta de la reserva
 	 */
@@ -87,9 +106,12 @@ public class Reserva {
 	// ----------------------------------------------------------------------------------------------------------------------------------
 
 	/**
+<<<<<<< HEAD
 	 * Metodo constructor de la clase Reserva <b>post: </b> Crea la reserva con los
 	 * valores que entran por parametro
 	 * 
+=======
+>>>>>>> refs/remotes/origin/master
 	 * @param id
 	 * @param fecha_registro
 	 * @param fecha_cancelacion
@@ -97,9 +119,12 @@ public class Reserva {
 	 * @param duracion
 	 * @param costo_total
 	 * @param cantidad_personas
-	 * @param hayMulta
 	 * @param valorMulta
+	 * @param IDColectivo
+	 * @param propuesta
+	 * @param cliente
 	 */
+<<<<<<< HEAD
 	public Reserva(@JsonProperty(value = "id") Long id, 
 			@JsonProperty(value = "fecha_registro") String fecha_registro,
 			@JsonProperty(value = "fecha_cancelacion") String fecha_cancelacion,
@@ -122,6 +147,34 @@ public class Reserva {
 		this.idColectivo = idColectivo;
 		this.idPropuesta = idPropuesta;
 		this.idCliente = idCliente;
+=======
+	public Reserva(
+			@JsonProperty(value="id") Long id,
+			@JsonProperty(value="fecha_registro") String fecha_registro,
+			@JsonProperty(value="fecha_cancelacion") String fecha_cancelacion,
+			@JsonProperty(value="fecha_inicio_estadia") String fecha_inicio_estadia,
+			@JsonProperty(value="duracion") Integer duracion,
+			@JsonProperty(value="costo_total") Double costo_total,
+			@JsonProperty(value="cantidad_personas") Integer cantidad_personas,
+			@JsonProperty(value="valorMulta") Double valorMulta,
+			@JsonProperty(value="IDColectivo") Long IDColectivo,
+			@JsonProperty(value= "propuesta") Propuesta propuesta,
+			@JsonProperty(value= "cliente") Cliente cliente) {
+		this.id = id;
+		this.fecha_registro = fecha_registro;
+		this.fecha_cancelacion = fecha_cancelacion;
+		this.fecha_inicio = fecha_inicio_estadia;
+		this.duracion = duracion;
+		this.costo_total = costo_total;
+		this.cantidad_personas = cantidad_personas;
+		this.multa= valorMulta;
+		//TODO inizialicar propuesta y cliente
+		
+		this.propuesta= propuesta;
+		this.cliente=cliente;
+		
+	}
+>>>>>>> refs/remotes/origin/master
 
 	}
 
@@ -161,7 +214,17 @@ public class Reserva {
 		this.fecha_cancelacion = fecha_cancelacion;
 	}
 
+<<<<<<< HEAD
 
+=======
+	public String getFecha_inicio_estadia() {
+		return fecha_inicio;
+	}
+
+	public void setFecha_inicio_estadia(String fecha_inicio_estadia) {
+		this.fecha_inicio = fecha_inicio_estadia;
+	}
+>>>>>>> refs/remotes/origin/master
 
 	/**
 	 * EN DIAS
@@ -210,6 +273,7 @@ public class Reserva {
 	public Long getIdCliente() {
 		return idCliente;
 	}
+<<<<<<< HEAD
 
 	public void setIdCliente(Long idCliente) {
 		this.idCliente = idCliente;
@@ -225,6 +289,51 @@ public class Reserva {
 
 	public Long getIdColectivo() {
 		return idColectivo;
+=======
+	
+	public Date getFechaFinal() throws Exception{
+		
+        DateFormat formato= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+		Date fechaInicio;
+		
+		fechaInicio = formato.parse(fecha_inicio);
+        
+		Calendar cal= Calendar.getInstance();
+		
+		cal.setTime(fechaInicio);
+		cal.add(Calendar.DAY_OF_YEAR, duracion);
+		Date fechaFin= cal.getTime();
+		
+		return fechaFin;
+	}
+
+
+
+
+	public Double getMulta() {
+		return multa;
+	}
+
+
+
+
+	public void setMulta(Double multa) {
+		this.multa = multa;
+	}
+
+
+
+
+	public Long getIdColectivo() {
+		return IdColectivo;
+	}
+
+
+
+
+	public void setIdColectivo(Long idColectivo) {
+		IdColectivo = idColectivo;
+>>>>>>> refs/remotes/origin/master
 	}
 
 	public void setIdColectivo(Long idColectivo) {

@@ -57,8 +57,12 @@ public class DAOPersona {
 	/**
 	 * Constante para indicar el usuario Oracle del estudiante
 	 */
+<<<<<<< HEAD
 	public final static String USUARIOF = "ISIS2304A901810" ;
 	
+=======
+	public final static String USUARIO = "ISIS2304A901810";
+>>>>>>> refs/remotes/origin/master
 
 
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -102,7 +106,11 @@ public class DAOPersona {
 
 		ArrayList<Persona> operadores = new ArrayList<Persona>();
 
+<<<<<<< HEAD
 		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE PAPEL = 'Operador'", USUARIOF);
+=======
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE PAPEL = 'operador'", USUARIO);
+>>>>>>> refs/remotes/origin/master
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -125,7 +133,11 @@ public class DAOPersona {
 
 		ArrayList<Persona> clientes = new ArrayList<Persona>();
 
+<<<<<<< HEAD
 		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE PAPEL = 'Cliente'", USUARIOF);
+=======
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE PAPEL = 'cliente'", USUARIO);
+>>>>>>> refs/remotes/origin/master
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -149,8 +161,13 @@ public class DAOPersona {
 
 		ArrayList<Propuesta> props = new ArrayList<Propuesta>();
 
+<<<<<<< HEAD
 		String sql = String.format("SELECT * FROM %1$s.PROPUESTA", USUARIOF);
 		System.out.println(sql);
+=======
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTA", USUARIO);
+
+>>>>>>> refs/remotes/origin/master
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
@@ -170,7 +187,11 @@ public class DAOPersona {
 		
 		Propuesta propuesta = null;
 
+<<<<<<< HEAD
 		String sql = String.format("SELECT * FROM %1$s.PROPUESTA WHERE ID = %2$d", USUARIOF, id); 
+=======
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTA WHERE ID = %2$d", USUARIO, id); 
+>>>>>>> refs/remotes/origin/master
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -199,7 +220,11 @@ public class DAOPersona {
 
 		ArrayList<Persona> personas = new ArrayList<Persona>();
 
+<<<<<<< HEAD
 		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE TIPO = '%2$s'", USUARIOF, tipo);
+=======
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE TIPO = '%2$s'", USUARIO, tipo);
+>>>>>>> refs/remotes/origin/master
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 
 		recursos.add(prepStmt);
@@ -224,7 +249,11 @@ public class DAOPersona {
 	{
 		Persona pep = null;
 
+<<<<<<< HEAD
 		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE ID = %2$d", USUARIOF, id); 
+=======
+		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE ID = %2$d", USUARIO, id); 
+>>>>>>> refs/remotes/origin/master
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -251,12 +280,21 @@ public class DAOPersona {
 
 		String sql = 
 				String.format(
+<<<<<<< HEAD
 						"INSERT INTO %1$s.PERSONA (ID, NOMBRE, APELLIDO,TIPO,PAPEL,VALOR_MULTA) "
 								+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', '%7$s')", 
 								USUARIOF, 
 								persona.getId(), 
 								persona.getNombre(),
 								persona.getApellido(),
+=======
+						"INSERT INTO %1$s.PERSONA (ID, NOMBRE, APELLIDO, TIPO, PAPEL, MULTA) "
+								+ "VALUES (%2$s, '%3$s', '%4$s', '%5$s', '%6$s', %7$s )", 
+								USUARIO, 
+								persona.getId(), 
+								persona.getNombre(),
+								persona.getApellido(), 
+>>>>>>> refs/remotes/origin/master
 								persona.getTipo(),
 								persona.getPapel(),
 								persona.getMulta()
@@ -293,21 +331,21 @@ public class DAOPersona {
 		} 
 
 		String sql =
-				String.format("INSERT INTO %1$s.PROPUESTAS(ID, ID_PERSONA, ID_HOSTEL, ID_HOTEL, ID_VIVIENDA_EXPRESS, ID_APARTAMENTO"
-						+ ", ID_VIVIENDA_UNIVERSITARIA, ID_HABITACION, SE_VA_RETIRAR, HABILITADA, FECHA_INICIO_DESHABILITADA, FECHA_FIN_DESHABILITADA)"
-						+ " VALUES ( %2$d, %3$d, %4$d, %5$d, %6$d, %7$d, %8$d, %9$d, %10$d, %11$d, %12$s, %13$s  )",
+				String.format("INSERT INTO %1$s.PROPUESTA VALUES (%2$s, '%3$s', %4$s, %5$s, %6$s, %7$s, %8$s,"
+						+ "%9$s, %10$s, %11$s, %12$s, %13$s, %14$s)", USUARIO,
 						propuesta.getId(),
+						propuesta.getTipo_inmueble(),
 						persona.getId(),
 						propuesta.getHostal().getId(),
 						propuesta.getHotel().getId(),
 						propuesta.getVivienda_express().getId(),
-						propuesta.getApartamento().getId(),
 						propuesta.getVivienda_universitarias().getId(),
+						propuesta.getApartamento().getId(),
 						propuesta.getHabitacion().getId(),
-						(propuesta.getSeVaRetirar()==false)? 0 : 1,
-						(propuesta.getHabilitada()==false)? 0 : 1,
-						propuesta.getFechaDeshabilitacionInicial(),
-						propuesta.getFechaDeshabilitacionFinal());
+						(propuesta.getSeVaRetirar() == true)? 1:0,
+						propuesta.getCapacidad(),
+						propuesta.getCosto(),
+						(propuesta.getHabilitada() == true)? 1:0);
 
 		System.out.println(sql);
 
@@ -346,7 +384,11 @@ public class DAOPersona {
 		//necesitio las reservas que tengan esa propuesta
 		ArrayList<Reserva> reservasConPropuesta = new ArrayList<>();
 		
+<<<<<<< HEAD
 		String reservitas= String.format("SELECT * FROM RESERVAS WHERE ID_PROPUESTA = %2$d", USUARIOF, propuesta.getId());
+=======
+		String reservitas= String.format("SELECT * FROM RESERVA WHERE ID_PROPUESTA = %2$d", USUARIO, propuesta.getId());
+>>>>>>> refs/remotes/origin/master
 		PreparedStatement prepStmt1= conn.prepareStatement(reservitas);
 		recursos.add(prepStmt1);	
 		ResultSet rs = prepStmt1.executeQuery();
@@ -367,8 +409,13 @@ public class DAOPersona {
 		if(fechaActual.after(lastDate)) {
 			propuesta.setSeVaRetirar(true);
 			StringBuilder sql = new StringBuilder();
+<<<<<<< HEAD
 			sql.append(String.format("UPDATE PROPUESTAS SET ", USUARIOF));
 			sql.append(String.format("SE_VA_RETIRAR = '%1$s' ", propuesta.getSeVaRetirar()));
+=======
+			sql.append(String.format("UPDATE PROPUESTA SET ", USUARIO));
+			sql.append(String.format("SE_RETIRA = %1$s ", propuesta.getSeVaRetirar()));
+>>>>>>> refs/remotes/origin/master
 			PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
 			recursos.add(prepStmt);
 			prepStmt.executeQuery();
@@ -414,7 +461,11 @@ public class DAOPersona {
 		//necesitio las reservas que tengan esa propuesta
 		ArrayList<Reserva> reservasConPropuesta = new ArrayList<>();
 		
+<<<<<<< HEAD
 		String reservitas= String.format("SELECT * FROM RESERVAS WHERE ID_PROPUESTA = %2$d", USUARIOF, propuesta.getId());
+=======
+		String reservitas= String.format("SELECT * FROM RESERVA WHERE ID_PROPUESTA = %2$d ORDER BY ID_PERSONA", USUARIO, propuesta.getId());
+>>>>>>> refs/remotes/origin/master
 		PreparedStatement prepStmt1= conn.prepareStatement(reservitas);
 		recursos.add(prepStmt1);	
 		ResultSet rs = prepStmt1.executeQuery();
@@ -424,16 +475,6 @@ public class DAOPersona {
 			reservasConPropuesta.add(dao.convertResultSetToReserva(rs));
 		//obtengo las reservas con la propuesta dada
 		
-		Date lastDate= new Date("1500-01-01 00:00:00");
-		for(Reserva res: reservasConPropuesta) {
-			Date temp= res.getFechaFinal();
-			if(temp.after(lastDate)) {
-				lastDate= temp;
-			}
-		}//fecha de ultima reserva que se acaba
-		
-		
-		
 		
 		//tomo las propuestas que esten en esta fecha
 		ArrayList<Propuesta> propuestasDisponibles=getPropuestasByTipoInmueble(propuesta.getTipo_inmueble());
@@ -442,20 +483,40 @@ public class DAOPersona {
 
 		
 		//busco el tipo de inmueble que buscan que este disponible
-		boolean fin= false;
 		int n= propuestasDisponibles.size();
 		Propuesta propuestaCambio= null;
-		for(int i=0; i<n && !fin; i++) {
-			if(propuestasDisponibles.get(i).getSeVaRetirar()== false && propuestasDisponibles.get(i).getHabilitada()== true) {
+		for(int i=0; i<n ; i++) {
+			if(propuestasDisponibles.get(i).getSeVaRetirar()== false && propuestasDisponibles.get(i).getHabilitada()== true && propuestasDisponibles.get(i) != propuesta) {
 				propuestaCambio= propuestasDisponibles.get(i);
+				break;
 			}
 		}
+		
 		
 		int nr= reservasConPropuesta.size();
 		for(int i=0; i<nr; i++) 
 			reservasConPropuesta.get(i).setPropuesta(propuestaCambio);
 		
-		dao.registrarReservaColectiva(reservasConPropuesta);//le asigno la propuesta determinada a la reserva que estaba
+		ArrayList<ReservaColectiva> colectivas= new ArrayList<>();
+		
+		for(int i=0; i<nr; i++) {
+			
+			Reserva actual= reservasConPropuesta.get(i);
+			for(int j=i+1; j<nr; j++) {
+				
+				Reserva actual2= reservasConPropuesta.get(j);
+				if(actual.getCliente().getId() != actual2.getCliente().getId()) {
+					
+					colectivas.add(new ReservaColectiva(actual.getId(), actual.getCliente(), j-i, null, actual.getFecha_inicio_estadia(), actual.getFecha_registro(), actual.getFecha_cancelacion(), j-i, actual.getDuracion(), actual.getCosto_total(), actual.getMulta(), propuestaCambio.getTipo_inmueble()));
+					i=j;
+					break;
+				}
+			}
+		}
+		
+		
+		for(ReservaColectiva res: colectivas)
+			dao.registrarReservaColectiva(res);
 		
 		
 		propuesta.setFechaDeshabilitacionInicial(actualDate);		
@@ -469,7 +530,7 @@ public class DAOPersona {
 		propuesta.setFechaDeshabilitacionFinal(fechaFinal);
 		
 		updatePropuesta(propuesta);
-		
+		registrarDeshabilitada(propuesta);
 		
 	}
 	
@@ -489,6 +550,14 @@ public class DAOPersona {
 		
 	}
 	
+	
+//	public ReservaColectiva getReservaColectivaByReservas(ArrayList<Reserva> reservas) {
+//		
+//		reservas
+//		
+//	}
+	
+	
 	/**
 	 * 
 	 * @param tipoInmueble
@@ -499,9 +568,12 @@ public class DAOPersona {
 		
 		ArrayList<Propuesta> props = new ArrayList<Propuesta>();
 		
-		
 
+<<<<<<< HEAD
 		String sql = String.format("SELECT * FROM %1$s.PROPUESTAS WHERE TIPO_INMUEBLE = %2$s", USUARIOF, tipoInmueble);
+=======
+		String sql = String.format("SELECT * FROM %1$s.PROPUESTA WHERE TIPO_INMUEBLE = '%2$s' ORDER BY ID_PERSONA", USUARIO, tipoInmueble);
+>>>>>>> refs/remotes/origin/master
 
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
@@ -514,15 +586,37 @@ public class DAOPersona {
 		
 	}
 	
+	
+	private void registrarDeshabilitada(Propuesta propuesta) throws SQLException {
+		
+		String sql= String.format("INSERT INTO %1$s.PROPUESTA_DESHABILITADA VALUES(%2$s, '%3$s', '%4$s')", USUARIO,
+				propuesta.getId(),
+				propuesta.getFechaDeshabilitacionInicial(),
+				propuesta.getFechaDeshabilitacionFinal());
+		
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		prepStmt.executeQuery();
+		
+	}
+	
 	public void updatePropuesta(Propuesta propuesta) throws SQLException {
 		
 		
 		StringBuilder sql = new StringBuilder();
+<<<<<<< HEAD
 		sql.append(String.format("UPDATE PROPUESTAS SET ", USUARIOF));
 		sql.append(String.format("TIPO_INMUEBLE = '%1$s' AND ID_HOTEL = '%2$s' AND ID_HOSTEL = '%3$s'"
 				+ "AND ID_VIVIENDA_EXPRESS = '%4$s' AND ID_APARTAMENTO = '%5$s' AND ID_VIVIENDA_UNIVERSITARIA = '%6$s'"
 				+ "AND ID_HABITACION = '%7$s' AND SE_VA_RETIRAR = '%8$s' AND HABILITADA = '%9$s' AND FECHA_INICIO_DESHABILITADA = '%10$s'"
 				+ "AND FECHA_FIN_DESHABILITADA = '%11$s'", 
+=======
+		sql.append(String.format("UPDATE %1$s.PROPUESTA SET ", USUARIO));
+		sql.append(String.format("TIPO_INMUEBLE = '%1$s' AND ID_HOTEL = %2$s AND ID_HOSTAL = %3$s"
+				+ "AND ID_VIVIENDA_EXPRESS = %4$s AND ID_APARTAMENTO = %5$s AND ID_VIVIENDA_UNIVERSITARIA = %6$s"
+				+ "AND ID_HABITACION = %7$s AND SE_RETIRA = %8$s AND HABILITADA = %9$s AND CAPACIDAD = %10$s AND "
+				+ "COSTO = %11$s", 
+>>>>>>> refs/remotes/origin/master
 				propuesta.getTipo_inmueble(),
 				propuesta.getHotel().getId(),
 				propuesta.getHostal().getId(),
@@ -532,8 +626,8 @@ public class DAOPersona {
 				propuesta.getHabitacion().getId(),
 				(propuesta.getSeVaRetirar()==true)? 1:0,
 				(propuesta.getHabilitada()==true)? 1:0,
-				propuesta.getFechaDeshabilitacionInicial(),
-				propuesta.getFechaDeshabilitacionFinal()));
+				propuesta.getCapacidad(),
+				propuesta.getCosto()));
 		PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
@@ -549,9 +643,15 @@ public class DAOPersona {
 	public void updatePersona ( Persona persona ) throws SQLException, Exception {
 
 		StringBuilder sql = new StringBuilder();
+<<<<<<< HEAD
 		sql.append(String.format("UPDATE %s.PERSONA SET ", USUARIOF));
 		sql.append(String.format("NOMBRE = '%1$s' AND APELLIDO = '%2$s' AND TIPO = '%3$s' "
 				+ "AND PAPEL = '%4$s' AND VALOR_MULTA = '%5$s'",
+=======
+		sql.append(String.format("UPDATE %s.PERSONA SET ", USUARIO));
+		sql.append(String.format("NOMBRE = '%1$s' AND APELLIDO = '%2$s' AND TIPO = '%3$s' "
+								+ "AND PAPEL = '%4$s' AND MULTA = %5$s",
+>>>>>>> refs/remotes/origin/master
 				persona.getNombre(), 
 				persona.getApellido(), 
 				persona.getTipo(),
@@ -628,20 +728,35 @@ public class DAOPersona {
 		String nombre = resultSet.getString("NOMBRE");
 		String apellido = resultSet.getString("APELLIDO");
 		String tipo = resultSet.getString("TIPO");
+<<<<<<< HEAD
 		String papel = resultSet.getString("PAPEL");
 		Integer multa = resultSet.getInt("VALOR_MULTA");
 
 		Persona pep = new Operador(id, nombre, apellido, tipo, papel, multa);
+=======
+//		String rol = resultSet.getString("ROL");
+//		String cedula = resultSet.getString("CEDULA");
+//		String nit = resultSet.getString("NIT");
+//		String email = resultSet.getString("EMAIL");
+		
+		String papel= resultSet.getString("PAPEL");
+		Integer multa= resultSet.getInt("MULTA");
+		
+		Persona pep = new Operador(id, nombre, apellido, tipo, papel, multa);
+		pep.setMulta(multa);
+>>>>>>> refs/remotes/origin/master
 
 		return pep;
 	}
 
 	public Propuesta convertResultSetTo_Propuesta(ResultSet resultSet) throws SQLException {
 
-		long id = resultSet.getLong("ID");
+		Long id = resultSet.getLong("ID");
 		String tipo_inmueble = resultSet.getString("TIPO_INMUEBLE");
+		Integer capacidad= resultSet.getInt("CAPACIDAD");
+		Double costo= resultSet.getDouble("COSTO");
 
-		Propuesta prop = new Propuesta(id, tipo_inmueble);
+		Propuesta prop = new Propuesta(id, tipo_inmueble, capacidad, costo);
 
 		if ( Propuesta.TIPO_INMUEBLE.APARTAMENTO.toString().equalsIgnoreCase(tipo_inmueble) ) {
 			String sql = String.format("SELECT * FROM %1$s.APARTAMENTO WHERE ID = %2$d", USUARIOF, resultSet.getLong("ID_APARTAMENTO"));
@@ -664,12 +779,20 @@ public class DAOPersona {
 		}
 
 		if ( Propuesta.TIPO_INMUEBLE.HOSTAL.toString().equalsIgnoreCase(tipo_inmueble) ) {
+<<<<<<< HEAD
 			String sql = String.format("SELECT * FROM %1$s.HOSTAL WHERE ID = %2$d", USUARIOF, resultSet.getLong("ID_HOSTAL"));
+=======
+			String sql = String.format("SELECT * FROM %1$s.HOSTELES WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_HOSTEL"));
+>>>>>>> refs/remotes/origin/master
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
 			ResultSet rs = prepStmt.executeQuery();
 			if (rs.next()) {
+<<<<<<< HEAD
 				prop.setHostal( new Hostal(rs.getLong("ID"), rs.getString("CAMARA_COMERCIO"), rs.getString("SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION"), rs.getInt("APERTURA"), rs.getInt("CIERRE")) );
+=======
+				prop.setHostal( new Hostal(rs.getLong("ID"), rs.getString("REGISTRO_CAMARA_COMERCIO"), rs.getString("REGISTRO_SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION"), rs.getInt("HORARIO_ADMIN_INICIAL"), rs.getInt("HORARIO_ADMIN_FINAL")) );
+>>>>>>> refs/remotes/origin/master
 			}
 		}
 
@@ -679,7 +802,11 @@ public class DAOPersona {
 			recursos.add(prepStmt);
 			ResultSet rs = prepStmt.executeQuery();
 			if (rs.next()) {
+<<<<<<< HEAD
 				prop.setHotel( new Hotel(rs.getLong("ID"), rs.getString("CAMARA_COMERCIO"), rs.getString("SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION") ));
+=======
+				prop.setHotel( new Hotel(rs.getLong("ID"), rs.getString("REGISTRO_CAMARA_COMERCIO"), rs.getString("REGISTRO_SUPERINTENDENCIA"), rs.getString("TIPO_HABITACION"), rs.getString("UBICACION")) );
+>>>>>>> refs/remotes/origin/master
 			}
 		}
 
@@ -710,7 +837,12 @@ public class DAOPersona {
 		/**int habilitada= resultSet.getInt("HABLILITADA");
 		Boolean estaHabilitada= (habilitada==1)? true: false;
 		prop.setHabilitada(estaHabilitada);
+<<<<<<< HEAD
 		*/
+=======
+		
+		
+>>>>>>> refs/remotes/origin/master
 		return prop;
 	}
 

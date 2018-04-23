@@ -1,15 +1,5 @@
-/**-------------------------------------------------------------------
- * ISIS2304 - Sistemas Transaccionales
- * Departamento de Ingenieria de Sistemas
- * Universidad de los Andes
- * Bogota, Colombia
- * 
- * Actividad: Tutorial Parranderos: Arquitectura
- * Autores:
- * 			Santiago Cortes Fernandez	-	s.cortes@uniandes.edu.co
- * 			Juan David Vega Guzman		-	jd.vega11@uniandes.edu.co
- * -------------------------------------------------------------------
- */
+
+
 package vos;
 
 import java.util.List;

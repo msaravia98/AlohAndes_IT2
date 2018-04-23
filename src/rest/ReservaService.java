@@ -1,7 +1,11 @@
 package rest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -55,6 +59,27 @@ public class ReservaService {
 	 * @return
 	 */
 	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	public Response getReservas() {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			
+			List<Reserva> reserva = tm.getAllReservas() ;
+			return Response.status(200).entity(reserva).build();
+		}catch( Exception e )
+		{
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@GET
 	@Path("{id: \\d+}")
 	@Produces({MediaType.APPLICATION_JSON})
 	public Response getReservaById(@PathParam("id") Long id) {
@@ -89,25 +114,7 @@ public class ReservaService {
 				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 			}
 	}
-	
-	/**
-	 * 
-	 * @param reserva
-	 * @return
-	 */
-	@POST
-	@Produces({ MediaType.APPLICATION_JSON })
-	@Consumes({ MediaType.APPLICATION_JSON })
-	public Response registrarReserva(ReservaColectiva reserva) {
-		
-		try {
-			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
-			tm.registrarReservaColectiva(reserva);
-			return Response.status(200).entity(reserva).build();
-			}catch( Exception e ){
-				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
-			}
-	}
+
 	
 	
 	
@@ -117,38 +124,22 @@ public class ReservaService {
 	 * @param reserva
 	 * @return
 	 */
-	@PUT
+	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response cancelarReserva(Reserva reserva) {
+	@Path("{id: \\d+}")
+	public Response cancelarReserva(@PathParam("id") Long id) {
 		
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			Reserva reserva = tm.getReservaById(id);
 			tm.cancelarReserva(reserva);
 			return Response.status( 200 ).entity(reserva).build();
 		} catch (Exception e) {
 			return Response.status( 500 ).entity(doErrorMessage(e)).build();
 		}
 	}
-	
-	/**
-	 * 
-	 * @param reserva
-	 * @return
-	 */
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response cancelarReservaColectiva(ReservaColectiva reserva) {
-		
-		try {
-			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
-			tm.cancelarReservaColectiva(reserva);
-			return Response.status( 200 ).entity(reserva).build();
-		} catch (Exception e) {
-			return Response.status( 500 ).entity(doErrorMessage(e)).build();
-		}
-	}
+
 	
 	
 }

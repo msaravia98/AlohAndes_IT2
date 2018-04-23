@@ -291,7 +291,88 @@ public class AlohandesTransactionManager {
 		}
 		return props;
 	}
+	
+	/**
+	 * Metodo que modela la transaccion que retorna todas las propuestas de la base de datos. <br/>
+	 * @return List<Bebedor> - Lista de propuestas que contiene el resultado de la consulta.
+	 * @throws Exception -  Cualquier error que se genere durante la transaccion
+	 */
+	public List<Reserva> getAllReservas() throws Exception {
+		DAOReserva dao = new DAOReserva();
+		List<Reserva> res;
+		try 
+		{
+			this.conn = darConexion();
+			dao.setConn(conn);
+			res = dao.getReservas();
+			
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return res;
+	}
+	
+	/**
+	 * Metodo que modela la transaccion que retorna todas las propuestas de la base de datos. <br/>
+	 * @return List<Bebedor> - Lista de propuestas que contiene el resultado de la consulta.
+	 * @throws Exception -  Cualquier error que se genere durante la transaccion
+	 */
+	public List<Reserva> getAllReservasColectivas() throws Exception {
+		DAOReserva dao = new DAOReserva();
+		List<Reserva> res = new ArrayList<>();
+		try 
+		{
+			this.conn = darConexion();
+			dao.setConn(conn);
 
+			res = dao.getReservasColectivas();
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return res;
+	}
 
 
 	/**
@@ -773,18 +854,24 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 	 * @param reserva
 	 * @throws Exception
 	 */
-	public void cancelarReservaColectiva(ReservaColectiva reserva) throws Exception{
+	public void cancelarReservaColectiva(Long reservaId) throws Exception{
 		
 		DAOReserva dao= new DAOReserva();
+		List<Reserva> reserva = new ArrayList<>();
 		
 		try
 		{
 			this.conn = darConexion();
 			dao.setConn( conn );
-			if ( this.getReservaByIdColectivo(reserva.getIdColectivo())== null )
-				throw new Exception("Las reservas con el ID colectivo = " + reserva.getIdColectivo() + " no se encuentran persistidas en la base de datos.");
+			if ( this.getReservaByIdColectivo(reservaId)== null )
+				throw new Exception("Las reservas con el ID colectivo = " + reservaId + " no se encuentran persistidas en la base de datos.");
 			else
+				
+				 
+				reserva = dao.getReservaByIdColectivo(reservaId);
+
 				dao.cancelarReservaColectiva(reserva);
+				
 		}catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();

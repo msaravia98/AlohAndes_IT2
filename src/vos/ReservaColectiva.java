@@ -10,10 +10,8 @@ public class ReservaColectiva  {
 	private Long IdColectivo;
 	
 	@JsonProperty (value = "cliente")
-	private Cliente cliente;
+	private Long cliente;
 	
-	@JsonProperty (value = "CantidadInmuebles")
-	private Integer CantidadInmuebles;
 	
 	@JsonProperty (value = "serviciosDeseados")
 	private String serviciosDeseados;
@@ -50,15 +48,14 @@ public class ReservaColectiva  {
 	
 	public ReservaColectiva(
 			@JsonProperty(value="idColectivo") Long idColectivo,
-			@JsonProperty(value="idCliente") Cliente idCliente,
+			@JsonProperty(value="idCliente") Long idCliente,
 			@JsonProperty(value="cantidadInmuebles") Integer cantidadInmbuebles,
 			@JsonProperty(value="serviciosDeseados") String serviciosDeseados,
 			@JsonProperty(value="fechaInicio") String inicio,
 			@JsonProperty(value="fechaRegistro") String fechaRegistro,
 			@JsonProperty(value="fechaCancelacion") String fechaCancelacion,
-			@JsonProperty(value="CantidadInmuebles")  Integer CantidadInmuebles ,
 			@JsonProperty(value="Duracion") Integer Duracion,
-			@JsonProperty(value= "costo") Double costo,
+			@JsonProperty(value= "Costo") Double costo,
 			@JsonProperty(value="multa")Double multa,
 			@JsonProperty(value= "tipoInmueble") String tipoInmueble) {
 		
@@ -69,7 +66,7 @@ public class ReservaColectiva  {
 		this.fechaInicio = inicio;
 		this.fechaRegistro = fechaRegistro;
 		this.fechaCancelacion = fechaCancelacion;
-		this.CantidadInmuebles = CantidadInmuebles;
+		this.cantidadInmuebles = cantidadInmuebles;
 		this.Duracion = Duracion;
 		this.Costo = costo;
 		this.Multa= multa;
@@ -100,20 +97,20 @@ public class ReservaColectiva  {
 		IdColectivo = idColectivo;
 	}
 
-	public Cliente getCliente() {
+	public Long getCliente() {
 		return this.cliente;
 	}
 
-	public void setIdCliente(Cliente idCliente) {
+	public void setIdCliente(Long idCliente) {
 		this.cliente = idCliente;
 	}
 
 	public Integer getCantidadInmuebles() {
-		return CantidadInmuebles;
+		return cantidadInmuebles;
 	}
 
 	public void setCantidadInmuebles(Integer cantidadInmuebles) {
-		CantidadInmuebles = cantidadInmuebles;
+		cantidadInmuebles = cantidadInmuebles;
 	}
 
 	public String getServiciosDeseados() {

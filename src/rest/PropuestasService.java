@@ -33,8 +33,6 @@ import vos.Propuesta;
 /**
  * Clase que expone servicios REST con ruta base: 
  * http://localhost:8080/TutorialParranderos/rest/personas/...
- * 
- * @author sebastian
  *
  */
 @Path("propuestas")

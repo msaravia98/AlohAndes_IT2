@@ -364,7 +364,8 @@ public class DAOPersona {
 			reservasConPropuesta.add(dao.convertResultSetToReserva(rs));
 		//obtengo las reservas con la propuesta dada
 		
-		Date lastDate= new Date("1500-01-01 00:00:00");
+		SimpleDateFormat lastDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date lastDate = lastDateFormat.parse("1500-01-01 00:00:00");
 		for(Reserva res: reservasConPropuesta) {
 			Date temp= res.getFechaFinal();
 			if(temp.after(lastDate)) {
@@ -375,8 +376,7 @@ public class DAOPersona {
 		if(fechaActual.after(lastDate)) {
 			propuesta.setSeVaRetirar(true);
 			StringBuilder sql = new StringBuilder();
-			sql.append(String.format("UPDATE PROPUESTA SET ", USUARIO));
-			sql.append(String.format("SE_RETIRA = %1$s ", propuesta.getSeVaRetirar()));
+			sql.append(String.format("UPDATE PROPUESTA SET SE_RETIRA = %1$s ", propuesta.getSeVaRetirar()));
 			PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
 			recursos.add(prepStmt);
 			prepStmt.executeQuery();
@@ -404,7 +404,7 @@ public class DAOPersona {
 		if(!propuesta.getHabilitada()) throw new BusinessLogicException("La propuesta ya está deshabilitada");
 		
 		//Formateando la fecha:
-        DateFormat formatoConHora= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+        DateFormat formatoConHora= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
         //Fecha actual desglosada:
         Calendar fecha = Calendar.getInstance();
@@ -762,7 +762,7 @@ public class DAOPersona {
 		Boolean seVaRetirar= (retiro == 1)? true: false;
 		prop.setSeVaRetirar(seVaRetirar);
 
-		int habilitada= resultSet.getInt("HABLITADA");
+		int habilitada= resultSet.getInt("HABILITADA");
 		Boolean estaHabilitada= (habilitada==1)? true: false;
 		prop.setHabilitada(estaHabilitada);
 

@@ -125,7 +125,7 @@ public class Propuesta {
 	//----------------------------------------------------------------------------------------------------------------------------------
 
 	public Propuesta ( @JsonProperty(value="id") Long id,
-			@JsonProperty(value="id") String tipo_inmueble,
+			@JsonProperty(value="tipo_inmueble") String tipo_inmueble,
 			@JsonProperty(value="capacidad") Integer capacidad,
 			@JsonProperty(value="costo") Double costo) {
 		this.id = id;

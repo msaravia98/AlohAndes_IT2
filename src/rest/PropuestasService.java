@@ -90,7 +90,6 @@ public class PropuestasService {
 			List<Propuesta> props;
 			System.out.println("hasta ahora bien");
 			props = tm.getAllPropuestas();
-			System.out.println("deberia servir");
 			return Response.status(200).entity(props).build();
 		} 
 		catch (Exception e) {
@@ -106,6 +105,7 @@ public class PropuestasService {
 	 * @return
 	 */
 	@PUT
+	@Path("/retirar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response retirarPropuesta(Propuesta propuesta) {
@@ -125,6 +125,7 @@ public class PropuestasService {
 	 * @return
 	 */
 	@PUT
+	@Path("/deshabilitar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deshabilitarPropuesta(Propuesta propuesta) {
@@ -144,6 +145,7 @@ public class PropuestasService {
 	 * @return
 	 */
 	@PUT
+	@Path("/rehabilitar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response rehabilitarPropuesta(Propuesta propuesta) {

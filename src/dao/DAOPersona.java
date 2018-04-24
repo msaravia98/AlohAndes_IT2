@@ -767,13 +767,6 @@ public class DAOPersona {
 	}
 
 
-
-
-
-
-
-
-<<<<<<< Updated upstream
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// REQUERIMIENTOS FUNCIONALES DE CONSULTA
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -786,7 +779,7 @@ public class DAOPersona {
 	 * @throws SQLException
 	 * @throws Exception
 	 */
-	public ArrayList<String> _dinero_recibido () throws SQLException, Exception {
+	public ArrayList<String> dineroRecibido () throws SQLException, Exception {
 		
 		String sql = "SELECT PP.*, ASW.ID_PROPUESTA, asw.\"TOTAL GANANCIAS\" FROM (\n" + 
 				"\n" + 
@@ -871,7 +864,8 @@ public class DAOPersona {
 		return sinDemanda;
 	}
 	
-	public ArrayList<String> clientesFrecuentes()throws Exception{
+	public ArrayList<String> clientesFrecuentes()throws Exception
+	{
 		
 		String sql= String.format("SELECT ID, %1$s.NOMBRE FROM PERSONA INNER JOIN %1$s.RESERVA "
 				+ "ON PERSONA.ID = RESERVA.ID_PERSONA"
@@ -889,22 +883,6 @@ public class DAOPersona {
 		}
 		return frecuentes;
 	}
-=======
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
->>>>>>> Stashed changes
 
 	
 	

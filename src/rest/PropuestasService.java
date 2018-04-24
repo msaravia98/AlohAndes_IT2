@@ -145,7 +145,6 @@ public class PropuestasService {
 	 * @return
 	 */
 	@PUT
-	@Path("/rehabilitar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path( "{id: \\d+}" )

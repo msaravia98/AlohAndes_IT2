@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import dao.DAOFC;
 import dao.DAOPersona;
 import dao.DAOReserva;
 import vos.Persona;
@@ -1102,7 +1101,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 	 */
 	public List<String> dineroRecibido() throws Exception 
 	{
-		DAOFC dao = new DAOFC( );
+		DAOPersona dao = new DAOPersona( );
 		List<String> ss = new ArrayList<>();
 		try
 		{
@@ -1147,58 +1146,13 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 	 */
 	public List<String> PropuestasPopulares() throws Exception 
 	{
-		DAOFC dao = new DAOFC( );
+		DAOPersona dao = new DAOPersona( );
 		List<String> ss = new ArrayList<>();
 		try
 		{
 			this.conn = darConexion();
 			dao.setConn(conn);
-			ss = dao.ofertasPopulares();
-
-		}
-		catch (SQLException sqlException) {
-			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
-			sqlException.printStackTrace();
-			throw sqlException;
-		} 
-		catch (Exception exception) {
-			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
-			exception.printStackTrace();
-			throw exception;
-		} 
-		finally {
-			try {
-				dao.cerrarRecursos();
-				if(this.conn!=null){
-					this.conn.close();					
-				}
-			}
-			catch (SQLException exception) {
-				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
-				exception.printStackTrace();
-				throw exception;
-			}
-		}	
-
-		return ss;
-	}
-	
-	/**
-	 * RFC 3
-	 * 
-	 * 
-	 * @return
-	 * @throws Exception
-	 */
-	public List<String> porcentajeOcupacion() throws Exception 
-	{
-		DAOFC dao = new DAOFC( );
-		List<String> ss = new ArrayList<>();
-		try
-		{
-			this.conn = darConexion();
-			dao.setConn(conn);
-			ss = dao.indiceOcupacion();
+			ss = dao._20_ofertas_mas_populares();
 
 		}
 		catch (SQLException sqlException) {
@@ -1235,15 +1189,15 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Long> ClientesFrecuentes(String tipoInmueble) throws Exception 
+	public List<String> ClientesFrecuentes(String tipoInmueble) throws Exception 
 	{
-		DAOFC dao = new DAOFC( );
-		List<Long> ss = new ArrayList<>();
+		DAOPersona dao = new DAOPersona( );
+		List<String> ss = new ArrayList<>();
 		try
 		{
 			this.conn = darConexion();
 			dao.setConn( conn );
-			ss = dao.darClienteFrecuente(tipoInmueble);
+			ss = dao.clientesFrecuentes();
 
 		}
 		catch (SQLException sqlException) {

@@ -853,6 +853,44 @@ public class DAOPersona {
 		return populares;
 		
 	}
+	
+	public ArrayList<String> propuestasSinDemanda()throws Exception{
+		
+		String sql= String.format("SELECT ID, TIPO_INMUEBLE FROM %1$s.PROPUESTA INNER JOIN %1$s.RESERVA"
+				+ "ON  PROPUESTA.ID = RESERVA.ID_PROPUESTA"
+				+ "WHERE RESERVA.DURACION <= 30", USUARIO);
+		
+		ArrayList<String> sinDemanda = new ArrayList<String>();
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+		
+
+		while (rs.next()) {
+			sinDemanda.add(rs.getLong("ID") + " "+rs.getString("TIPO_INMUEBLE"));
+		}
+		return sinDemanda;
+	}
+	
+	public ArrayList<String> clientesFrecuentes()throws Exception{
+		
+		String sql= String.format("SELECT ID, %1$s.NOMBRE FROM PERSONA INNER JOIN %1$s.RESERVA "
+				+ "ON PERSONA.ID = RESERVA.ID_PERSONA"
+				+ "WHERE PERSONA.PAPEL = 'cliente' AND (RESERVA.DURACION >= 16)", USUARIO);
+		
+		ArrayList<String> frecuentes = new ArrayList<String>();
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+		
+
+		while (rs.next()) {
+			frecuentes.add(rs.getLong("ID_PROPUESTA") + "");
+		}
+		return frecuentes;
+	}
 
 	
 	

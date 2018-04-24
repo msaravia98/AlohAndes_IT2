@@ -1114,6 +1114,83 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 		return ss;
 	}
 
+	
+	public List<String> propouestasSinDemandas()throws Exception{
+		
+		DAOPersona dao = new DAOPersona( );
+		List<String> ss = new ArrayList<>();
+		try
+		{
+			this.conn = darConexion();
+			dao.setConn( conn );
+			ss = dao.propuestasSinDemanda();
+
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}	
+
+		return ss;
+		
+	}
+	public List<String> clientesfrecuentes()throws Exception{
+		
+		DAOPersona dao = new DAOPersona( );
+		List<String> ss = new ArrayList<>();
+		try
+		{
+			this.conn = darConexion();
+			dao.setConn( conn );
+			ss = dao.clientesFrecuentes();
+			
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}	
+		
+		return ss;
+		
+	}
 
 
 

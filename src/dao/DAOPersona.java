@@ -498,14 +498,11 @@ public class DAOPersona {
 		
 		if(propuesta.getHabilitada()) throw new BusinessLogicException("Tiene que estar deshabilitada la propuesta");
 		
-		try {
-			propuesta.habilitar();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		updatePropuesta(propuesta);
+		String sql = String.format("UPDATE PROPUESTA SET HABILITADA = 1 WHERE PROPUESTA.ID=%1$d", USUARIO);
+		System.out.println(sql);
+
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
 		
 	}
 	
@@ -776,6 +773,7 @@ public class DAOPersona {
 
 
 
+<<<<<<< Updated upstream
 	//----------------------------------------------------------------------------------------------------------------------------------
 	// REQUERIMIENTOS FUNCIONALES DE CONSULTA
 	//----------------------------------------------------------------------------------------------------------------------------------
@@ -891,6 +889,22 @@ public class DAOPersona {
 		}
 		return frecuentes;
 	}
+=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+>>>>>>> Stashed changes
 
 	
 	

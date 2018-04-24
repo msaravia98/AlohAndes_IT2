@@ -260,6 +260,8 @@ public class Propuesta {
         int segundo = fecha.get(Calendar.SECOND);
         String actualDate= ""+anio+"-"+mes+"-"+dia+" "+hora+":"+minuto+":"+segundo;
         
+     
+        
 		Date fechaActual= formatoConHora.parse(actualDate);
 		Date fechaFin= formatoConHora.parse(fechaDeshabilitacionFinal);
 		if(fechaActual.after(fechaFin))

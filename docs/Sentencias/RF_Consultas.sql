@@ -38,7 +38,48 @@ GROUP BY ID_PROPUESTA
 ORDER BY "Cantidad Reservas" DESC)
 WHERE ROWNUM <= 20;
 
+-- RFC3: Indice de Ocupacion de cada Oferta
+SELECT ID_PERSONA, COUNT(CAPACIDAD)
+FROM(SELECT ID_PERSONA 
+     FROM RESERVA RE 
+     WHERE RE.ID_PROPUESTA 
+     IN 
+     (SELECT ID 
+      FROM PROPUESTA 
+      WHERE TIPO_INMUEBLE = UPPER("+tipoInmueble+")
+     )
+    ) 
+GROUP BY ID_PROPUESTA
+HAVING COUNT (ID_PERSONA) >3;
 
+
+-- RCF8: Dar cliente más frecuente dado un tipo de inmueble
+SELECT ID_PERSONA, COUNT(ID_PERSONA)
+FROM(SELECT ID_PERSONA 
+     FROM RESERVA RE 
+     WHERE RE.ID_PROPUESTA 
+     IN 
+     (SELECT ID 
+      FROM PROPUESTA 
+      WHERE TIPO_INMUEBLE = UPPER("+tipoInmueble+")
+     )
+    ) 
+GROUP BY ID_PERSONA
+HAVING COUNT (ID_PERSONA) >3;
+
+-- RCF9: OFERTAS SIN DEMANDA
+SELECT *,
+FROM(
+        SELECT ID_PROPUESTA
+        FROM PROPUESTA PRO
+        WHERE PRO.ID
+        NOT IN
+    (
+        SELECT *
+        FROM RESERVA
+        WHERE RESERVA.FECHA_INGRESO 
+    )
+)
 
 
 

@@ -127,8 +127,9 @@ public class ColectivaService {
 			
 			try {
 				AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+				Reserva re = tm.getReservaById(id);
 				tm.cancelarReservaColectiva(id);
-				return Response.status( 200 ).entity(id).build();
+				return Response.status( 200 ).entity(re).build();
 			} catch (Exception e) {
 				return Response.status( 500 ).entity(doErrorMessage(e)).build();
 			}

@@ -125,14 +125,16 @@ public class PropuestasService {
 	 * @return
 	 */
 	@PUT
-	@Path("/deshabilitar")
+	@Path("/deshabilitar/{id: \\d+}/{dias: \\d+}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deshabilitarPropuesta(Propuesta propuesta) {
+	
+	public Response deshabilitarPropuesta(@PathParam("id") Long id, @PathParam("dias") Long numDias) {
 		
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
-			tm.deshabilitarPropuesta(propuesta);
+			tm.deshabilitarPropuesta(id, numDias);
+			Propuesta propuesta = tm.getPropuestaById(id);
 			return Response.status( 200 ).entity(propuesta).build();
 		}catch (Exception e) {
 			return Response.status( 500 ).entity(doErrorMessage(e)).build();
@@ -147,7 +149,7 @@ public class PropuestasService {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path( "{id: \\d+}" )
+	@Path( "rehabilitar/{id: \\d+}" )
 	public Response rehabilitarPropuesta(@PathParam("id") Long id) {
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());

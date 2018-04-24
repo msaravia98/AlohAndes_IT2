@@ -96,7 +96,7 @@ public class RequerimientosService {
 	 * 
 	 * @param reserva
 	 * @return
-	 */
+	 *//*
 	@GET
 	@Produces( MediaType.APPLICATION_JSON)
 	@Consumes( MediaType.APPLICATION_JSON)
@@ -110,7 +110,7 @@ public class RequerimientosService {
 			}catch( Exception e ){
 				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 			}
-	}
+	}*/
 	
 	
 	
@@ -118,7 +118,7 @@ public class RequerimientosService {
 	 * 
 	 * @param reserva
 	 * @return
-	 */
+	 *//*
 	@GET
 	@Produces( MediaType.APPLICATION_JSON)
 	@Consumes( MediaType.APPLICATION_JSON)
@@ -132,7 +132,7 @@ public class RequerimientosService {
 			}catch( Exception e ){
 				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 			}
-	}
+	}*/
 
 	
 	

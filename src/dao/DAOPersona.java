@@ -397,27 +397,13 @@ public class DAOPersona {
 	 * @throws Exception
 	 * @throws BusinessLogicException
 	 */
-	public void deshabilitarPropuesta(Propuesta propuesta, int numDias) throws Exception, BusinessLogicException{
+	public void deshabilitarPropuesta(Long id, Long numDias) throws Exception, BusinessLogicException
+	{
 		
+		Propuesta propuesta = getPropuestaById(id);
 		
 		if(propuesta.getSeVaRetirar()) throw new BusinessLogicException("La propuesta se va retirar, por ende no se puede deshabilitar");
-		if(!propuesta.getHabilitada()) throw new BusinessLogicException("La propuesta ya está deshabilitada");
-		
-		//Formateando la fecha:
-        DateFormat formatoConHora= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        
-        //Fecha actual desglosada:
-        Calendar fecha = Calendar.getInstance();
-        int anio = fecha.get(Calendar.YEAR);
-        int mes = fecha.get(Calendar.MONTH) + 1;
-        int dia = fecha.get(Calendar.DAY_OF_MONTH);
-        int hora = fecha.get(Calendar.HOUR_OF_DAY);
-        int minuto = fecha.get(Calendar.MINUTE);
-        int segundo = fecha.get(Calendar.SECOND);
-        String actualDate= ""+anio+"-"+mes+"-"+dia+" "+hora+":"+minuto+":"+segundo;
-        
-		Date fechaActual= formatoConHora.parse(actualDate);
-		
+		if(!propuesta.getHabilitada()) throw new BusinessLogicException("La propuesta ya está deshabilitada");	
 		
 		//necesitio las reservas que tengan esa propuesta
 		ArrayList<Reserva> reservasConPropuesta = new ArrayList<>();
@@ -477,16 +463,15 @@ public class DAOPersona {
 		for(ReservaColectiva res: colectivas)
 			dao.registrarReservaColectiva(res);
 		
+		Calendar fecha = Calendar.getInstance();
 		
-		propuesta.setFechaDeshabilitacionInicial(actualDate);		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+		propuesta.setFechaDeshabilitacionInicial(sdf.format(fecha.getTime()));
 		        
-		Calendar cal= Calendar.getInstance();
-		cal.setTime(fechaActual);
-		cal.add(Calendar.DAY_OF_YEAR, numDias);
-		Date fechaFin= cal.getTime();
-		String fechaFinal= fechaFin.toString();
+		fecha.add(Calendar.DAY_OF_YEAR, (int) (long) numDias);
+		Date fechaFin= fecha.getTime();
 		
-		propuesta.setFechaDeshabilitacionFinal(fechaFinal);
+		propuesta.setFechaDeshabilitacionFinal(sdf.format(fechaFin));
 		
 		updatePropuesta(propuesta);
 		registrarDeshabilitada(propuesta);
@@ -555,26 +540,9 @@ public class DAOPersona {
 	
 	public void updatePropuesta(Propuesta propuesta) throws SQLException {
 		
+		String sql = "UPDATE PROPUESTA SET PROPUESTA.HABILITADA = 0 WHERE PROPUESTA.ID = " + "'" + propuesta.getId() + "'";
 		
-		StringBuilder sql = new StringBuilder();
-
-		sql.append(String.format("UPDATE %1$s.PROPUESTA SET ", USUARIO));
-		sql.append(String.format("TIPO_INMUEBLE = '%1$s' AND ID_HOTEL = %2$s AND ID_HOSTAL = %3$s"
-				+ "AND ID_VIVIENDA_EXPRESS = %4$s AND ID_APARTAMENTO = %5$s AND ID_VIVIENDA_UNIVERSITARIA = %6$s"
-				+ "AND ID_HABITACION = %7$s AND SE_RETIRA = %8$s AND HABILITADA = %9$s AND CAPACIDAD = %10$s AND "
-				+ "COSTO = %11$s", 
-				propuesta.getTipo_inmueble(),
-				propuesta.getHotel().getId(),
-				propuesta.getHostal().getId(),
-				propuesta.getVivienda_express().getId(),
-				propuesta.getApartamento().getId(),
-				propuesta.getVivienda_universitarias().getId(),
-				propuesta.getHabitacion().getId(),
-				(propuesta.getSeVaRetirar()==true)? 1:0,
-				(propuesta.getHabilitada()==true)? 1:0,
-				propuesta.getCapacidad(),
-				propuesta.getCosto()));
-		PreparedStatement prepStmt = conn.prepareStatement(sql.toString());
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		prepStmt.executeQuery();
 	}

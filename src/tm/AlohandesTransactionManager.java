@@ -997,19 +997,19 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 	 * @param numDias
 	 * @throws Exception
 	 */
-	public void deshabilitarPropuesta(Propuesta propuesta)throws Exception {
-
-
+	public void deshabilitarPropuesta(Long id, Long numDias)throws Exception 
+	{
 		DAOPersona dao= new DAOPersona();
 
 		try {
+			Propuesta propuesta = getPropuestaById(id);
 			this.conn = darConexion();
 			dao.setConn( conn );
 			conn.commit();
-			if(this.getPropuestaById(propuesta.getId()) == null)
-				throw new Exception("La propuesta con el id = " + propuesta.getId() + " no se encuentra persistido en la base de datos.");
+			if(propuesta == null)
+				throw new Exception("La propuesta con el id = " + id + " no se encuentra persistido en la base de datos.");
 			else
-				dao.deshabilitarPropuesta(propuesta, propuesta.getDuracionDeshabilitada());
+				dao.deshabilitarPropuesta(id, numDias);
 		}
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());

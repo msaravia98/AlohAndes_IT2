@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import tm.BusinessLogicException;
 import vos.Apartamento;
@@ -118,28 +119,7 @@ public class DAOReserva {
 
 
 
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 * @throws SQLException
-	 * @throws Exception
-	 */
-	public List<Reserva> getReservaByIdColectivo(Long id) throws SQLException, Exception {
-		List<Reserva> reserva = new ArrayList<>();
-
-		String sql = String.format("SELECT * FROM %1$s.RESERVA WHERE ID_COLECTIVO = %2$d", USUARIO, id); 
-
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		ResultSet rs = prepStmt.executeQuery();
-
-		if(rs.next()) {
-			reserva.add(convertResultSetToReserva(rs));
-		}
-
-		return reserva;
-	}
+	
 
 	/**
 	 * Metodo que agregar la informacion de una nueva reserva en la Base de Datos a partir del parametro ingresado<br/>
@@ -304,7 +284,33 @@ public class DAOReserva {
 		}
 		return res;
 	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 * @throws Exception
+	 */
+	public List<Reserva> getReservaByIdColectivo(Long id) throws SQLException, Exception {
+		
+		List<Reserva> lista= new ArrayList<>();
+		
 
+		String sql = String.format("SELECT * FROM %1$s.RESERVA WHERE ID_COLECTIVO = %2$d", USUARIO, id); 
+		System.out.println(sql+ "Esta es la sentencia");
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+
+		if(rs.next()) {
+			Reserva res = (convertResultSetToReserva(rs));
+			lista.add(res);
+		}
+		System.out.println(lista.size() + "Este es el tamanio de lo que se va a retornar");
+		return lista;
+	}
+	
 	public void registrarReservaColectiva(ReservaColectiva reserva) throws Exception
 	{
 		List<Propuesta> props = propuestasQueSirven(reserva);
@@ -323,7 +329,10 @@ public class DAOReserva {
 		for(Integer i =0;i<cant;i++)
 		{
 			Propuesta p = props.get(i);
-			Long id = i.longValue();
+			
+			Long numero = UUID.randomUUID().getMostSignificantBits();
+			Long id = Long.MAX_VALUE + numero;
+
 			nueva = new Reserva(id, 
 					reg, 
 					can, 
@@ -409,7 +418,11 @@ public class DAOReserva {
 	 * @throws BusinessLogicException Si se genera un error dentro del metodo.
 	 */
 	public void cancelarReservaColectiva(Long id) throws SQLException, BusinessLogicException, Exception {
-		List<Reserva> res = darReservasColectivasID(id);
+		
+		List<Reserva> res = getReservaByIdColectivo(id);
+		
+		System.out.println(res.size()+"Este es el tamanio de las reservas");
+		
 		Double multa = 0.0;
 		for(Reserva re:res)
 		{
@@ -417,29 +430,19 @@ public class DAOReserva {
 			multa+=re.getMulta();
 			re.setMulta(multa);
 		}
-	}
-
-	private List<Reserva> darReservasColectivasID(Long id) throws SQLException
-	{
-		List<Reserva> retornar = new ArrayList<>();
-		
-		String sql    ="SELECT *"
-				+ "FROM RESERVAS"
-				+ "WHERE ID_COLECTIVO ="+id;
-
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
-		recursos.add(prepStmt);
-		ResultSet rs =prepStmt.executeQuery();
-
-		while(rs.next())
+		if(res.size()==0)
 		{
-			retornar.add(convertResultSetToReserva(rs));
+			String sql = String.format("%1$s.COMMIT", USUARIO); 
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			recursos.add(prepStmt);
 		}
-		return retornar;
+		else
+		{
+			String sql = String.format("%1$s.ROLLBACK", USUARIO); 
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			recursos.add(prepStmt);
+		}
 	}
-
-
-
 
 	public Reserva convertResultSetToReserva(ResultSet resultSet) throws SQLException {
 
@@ -553,7 +556,6 @@ public class DAOReserva {
 		
 		return prop;
 	}
-
 
 	
 

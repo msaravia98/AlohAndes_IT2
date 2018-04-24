@@ -148,11 +148,14 @@ public class PropuestasService {
 	@Path("/rehabilitar")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response rehabilitarPropuesta(Propuesta propuesta) {
+	@Path( "{id: \\d+}" )
+	public Response rehabilitarPropuesta(@PathParam("id") Long id) {
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
-			tm.rehabilitarPropuesta(propuesta);
+			tm.rehabilitarPropuesta(id);
+			Propuesta propuesta = tm.getPropuestaById(id);
 			return Response.status( 200 ).entity(propuesta).build();
+			
 		}catch (Exception e) {
 			return Response.status( 500 ).entity(doErrorMessage(e)).build();
 		}

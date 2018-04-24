@@ -84,15 +84,20 @@ public class PropuestasService {
 	public Response getPropuestas() {
 
 		try {
+			System.out.println("aqui inicia");
 			AlohandesTransactionManager tm = new AlohandesTransactionManager(getPath());
+			System.out.println("segundo");
 			List<Propuesta> props;
+			System.out.println("hasta ahora bien");
 			props = tm.getAllPropuestas();
+			System.out.println("deberia servir");
 			return Response.status(200).entity(props).build();
 		} 
 		catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 	}
+	
 	
 	
 	/**

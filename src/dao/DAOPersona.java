@@ -150,10 +150,12 @@ public class DAOPersona {
 	public ArrayList<Propuesta> getPropuestas() throws SQLException, Exception {
 
 		ArrayList<Propuesta> props = new ArrayList<Propuesta>();
-
+		
+		System.out.println("hola");
 
 		String sql = String.format("SELECT * FROM %1$s.PROPUESTA", USUARIO);
 
+		System.out.println("que putas");
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
@@ -715,7 +717,7 @@ public class DAOPersona {
 
 		if ( Propuesta.TIPO_INMUEBLE.HOSTAL.toString().equalsIgnoreCase(tipo_inmueble) ) {
 
-			String sql = String.format("SELECT * FROM %1$s.HOSTELES WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_HOSTEL"));
+			String sql = String.format("SELECT * FROM %1$s.HOSTAL WHERE ID = %2$d", USUARIO, resultSet.getLong("ID_HOSTAL"));
 			PreparedStatement prepStmt = conn.prepareStatement(sql);
 			recursos.add(prepStmt);
 			ResultSet rs = prepStmt.executeQuery();
@@ -760,25 +762,12 @@ public class DAOPersona {
 		Boolean seVaRetirar= (retiro == 1)? true: false;
 		prop.setSeVaRetirar(seVaRetirar);
 
-		int habilitada= resultSet.getInt("HABLILITADA");
+		int habilitada= resultSet.getInt("HABLITADA");
 		Boolean estaHabilitada= (habilitada==1)? true: false;
 		prop.setHabilitada(estaHabilitada);
 
 		return prop;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

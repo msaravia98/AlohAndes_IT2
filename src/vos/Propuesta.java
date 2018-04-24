@@ -8,7 +8,6 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.sun.javafx.collections.NonIterableChange.GenericAddRemoveChange;
 
 import tm.BusinessLogicException;
 

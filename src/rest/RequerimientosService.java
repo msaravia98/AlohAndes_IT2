@@ -59,7 +59,6 @@ public class RequerimientosService {
 	 */
 	@GET
 	@Produces( MediaType.APPLICATION_JSON)
-	@Consumes( MediaType.APPLICATION_JSON)
 	@Path("RFC1")
 	public Response darDineroRecibido() {
 		
@@ -79,7 +78,6 @@ public class RequerimientosService {
 	 */
 	@GET
 	@Produces( MediaType.APPLICATION_JSON)
-	@Consumes( MediaType.APPLICATION_JSON)
 	@Path("RFC2")
 	public Response ofertasPopulares() {
 		
@@ -93,46 +91,119 @@ public class RequerimientosService {
 	}
 	
 	/**
-	 * 
-	 * @param reserva
+	 * Requerimiento funcional de consulta 3, que saca el indice de ocupación de cada propuesta
+	 * @param reserva 
 	 * @return
-	 *//*
+	 */
 	@GET
 	@Produces( MediaType.APPLICATION_JSON)
-	@Consumes( MediaType.APPLICATION_JSON)
 	@Path("RFC3")
 	public Response indiceOcupacion() {
 		
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
-			List<String> ofertas = tm.porcentajeOcupacion();
+			List<String> ofertas = tm.IndiceOcupacion();
 			return Response.status(200).entity(ofertas).build();
 			}catch( Exception e ){
 				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 			}
-	}*/
+	}
 	
+	/**
+	 * Requerimiento funcional de consulta 3, que saca el indice de ocupación de cada propuesta
+	 * @param reserva 
+	 * @return
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("RFC4")
+	public Response alojamientosDisponibles(@QueryParam("in") String in,@QueryParam("fin") String fin,@QueryParam("servs") String servs) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Long> ofertas = tm.darPropuestasDisponibles(in, fin, servs);
+			return Response.status(200).entity(ofertas).build();
+			}catch( Exception e ){
+				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+			}
+	}
+	
+	/**
+	 * Requerimiento funcional de consulta 3, que saca el indice de ocupación de cada propuesta
+	 * @param reserva 
+	 * @return
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("RFC5")
+	public Response darUsoTotalAlohAndes() {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<String> uso = tm.darUsoAlohAndes();
+			return Response.status(200).entity(uso).build();
+			}catch( Exception e ){
+				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+			}
+	}
+	
+	/**
+	 * Requerimiento funcional de consulta 3, que saca el indice de ocupación de cada propuesta
+	 * @param reserva 
+	 * @return
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("RFC6")
+	public Response darUsoDeUnUsuario(@QueryParam ("id") Long id) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<String> uso = tm.darUsoIndividualAlohAndes(id);
+			return Response.status(200).entity(uso).build();
+			}catch( Exception e ){
+				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+			}
+	}
 	
 	
 	/**
 	 * 
 	 * @param reserva
 	 * @return
-	 *//*
+	 */
 	@GET
 	@Produces( MediaType.APPLICATION_JSON)
-	@Consumes( MediaType.APPLICATION_JSON)
-	@Path("/{tipo}")
-	public Response darFrecuentes(@PathParam("tipo")String tipo) {
+	@Path("RFC8")
+	public Response darFrecuentes(@QueryParam("tipo")String tipo) {
 		
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
-			List<Long> clien = tm.ClientesFrecuentes(tipo);
+			List<String> clien = tm.ClientesFrecuentes(tipo);
 			return Response.status(200).entity(clien).build();
 			}catch( Exception e ){
 				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 			}
-	}*/
+	}
+	
+	/**
+	 * Requerimiento funcional de consulta 3, que saca el indice de ocupación de cada propuesta
+	 * @param reserva 
+	 * @return
+	 */
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("RFC9")
+	public Response ofertasSinDemanda() {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<String> uso = tm.propuestasSinDemandas();
+			return Response.status(200).entity(uso).build();
+			}catch( Exception e ){
+				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+			}
+	}
 
 	
 	

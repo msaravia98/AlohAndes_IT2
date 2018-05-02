@@ -349,8 +349,36 @@ public class DAOReserva {
 	}
 
 
+	/**
+	 * Retorna las propuestas que sirven, segun tipo de propuesta y los servicios requeridos
+	 * @param reserva Reserva Colectiva con los filtros que se desean aplicar
+	 * @return Retorna una lista con las Propuestas que cumplen los filtros dados
+	 * @throws BusinessLogicException Si se violan reglas de negocio
+	 * @throws SQLException En la ejecución de las sentencias.
+	 */
+	private List<Long> propuestasDisponiblesFecha(String in,String fin) throws BusinessLogicException, SQLException {
 
-	
+		
+		List<Long> este= new ArrayList<>();
+
+
+		
+		String sql    ="SELECT ID_PROPUESTA  \r\n" + 
+				"FROM RESERVA  \r\n" + 
+				"WHERE TO_DATE("+"'"+in+"'"+", 'yyyy/mm/dd') BETWEEN R.FECHA_INICIO AND R.FECHA_FINAL)\r\n" + 
+				"OR TO_DATE("+"'"+fin+"'"+", 'yyyy/mm/dd') BETWEEN R.FECHA_INICIO AND R.FECHA_FINAL)";
+		System.out.println(sql+ "esta es la sentencia");
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs =prepStmt.executeQuery();
+
+		while(rs.next())
+		{
+			este.add(rs.getLong("ID_PROPUESTA"));
+		}
+		return este;
+	}
+
 	/**
 	 * Retorna las propuestas que sirven, segun tipo de propuesta y los servicios requeridos
 	 * @param reserva Reserva Colectiva con los filtros que se desean aplicar

@@ -1442,6 +1442,47 @@ public class AlohandesTransactionManager {
 		return ss;
 
 	}
+	
+	/**
+	 * RFC10 sin parametros
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> consumoQueSeHizoSinAgrupar(String fechaInicio, String fechaFin) throws Exception{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Persona> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.consultaConsumoQueSeHizoSinAgrupamiento(fechaInicio, fechaFin);
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
 
 	/**
 	 * RFC10
@@ -1487,6 +1528,85 @@ public class AlohandesTransactionManager {
 
 		return ss;
 	}
+	
+	/**
+	 * RFC11 sin agrupar
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> consumoQueNoSeHizoSinAgrupar(String fechaInicio, String fechaFin) throws Exception{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Persona> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.consultaConsumoQueNoSeHizoSinAgrpar(fechaInicio, fechaFin);
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
+	
+	
+	
+	public ArrayList<Persona> consumoQueNoSeHizoAgrupado(String fechaInicio, String fechaFin, Long idPropuesta, String tipoInmueble,
+			String tipoPersona) throws SQLException{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Persona> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.consultaConsumoQueNoSeHizoAgrupado(fechaInicio, fechaFin, idPropuesta, tipoInmueble, tipoPersona);
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
+	
 	
 	/**
 	 * RFC12 (1)

@@ -210,6 +210,27 @@ public class RequerimientosService {
 	}
 	
 	/**
+	 * RFC10 sin parametros
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc10/{fechaInicio: .+}/{fechaFin: .+}")
+	public Response consumoQueSeHizoSinAgrupar(@PathParam("fechaInicio") String fechaInicio, @PathParam("fechaFin")String fechaFin) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> personas= tm.consumoQueSeHizoSinAgrupar(fechaInicio, fechaFin);
+			return Response.status(200).entity(personas).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	
+	/**
 	 * RFC10
 	 * @param fechaInicio
 	 * @param fechaFin
@@ -234,7 +255,52 @@ public class RequerimientosService {
 	}
 	
 	/**
-	 * 
+	 * rfc11 sin parametros
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc11/{fechaInicio: .+}/{fechaFin: .+}")
+	public Response consumoQueNoSeHizoSinAgrupar(@PathParam("fechaInicio")String fechaInicio,@PathParam("fechaFin") String fechaFin) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> personas= tm.consumoQueNoSeHizoSinAgrupar(fechaInicio, fechaFin);
+			return Response.status(200).entity(personas).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	/**
+	 * rfc11 agrupado
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param idPropuesta
+	 * @param tipoInmueble
+	 * @param tipoPersona
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc11/{fechaInicio: .+}/{fechaFin: .+}/{idPropuesta: \\d+}/{tipoInmueble: .+}/{tipoPersona: .+}")
+	public Response consumoQueNoSeHizoAgrupado(@PathParam("fechaInicio")String fechaInicio,@PathParam("fechaFin") String fechaFin,
+			@PathParam("idPropuesta")Long idPropuesta,@PathParam("tipoInmueble") String tipoInmueble, @PathParam("tipoPersona") String tipoPersona) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> personas= tm.consumoQueSeHizo(fechaInicio, fechaFin, idPropuesta, tipoInmueble, tipoPersona);
+			return Response.status(200).entity(personas).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	
+	/**
+	 * rfc12 (1)
 	 * @return
 	 */
 	@GET

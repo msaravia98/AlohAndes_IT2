@@ -321,10 +321,40 @@ public class DAOFC {
 
 		return resultado;
 	}
+	
+	
+	/**
+	 * RFC10 sin parametros
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 * @throws SQLException 
+	 */
+	public ArrayList<Persona> consultaConsumoQueSeHizoSinAgrupamiento(String fechaInicio, String fechaFin) throws SQLException{
+		DAOPersona daop= new DAOPersona();
+		StringBuilder sql= new StringBuilder();
+
+		sql.append(String.format("SELECT  PER.*,p.* , r.*\n" + 
+				"FROM (PROPUESTA P INNER JOIN RESERVA R ON P.ID = R.ID_PROPUESTA) INNER JOIN PERSONA PER ON R.ID_PERSONA = PER.ID\n" + 
+				"WHERE r.fecha_registro >= to_date('%1s', 'DD-MM-YYYY') and R.FECHA_REGISTRO <= TO_DATE('%2s', 'DD-MM-YYYY') AND PER.PAPEL = 'CLIENTE'",
+				fechaInicio,
+				fechaFin));
+
+		ArrayList<Persona> resultado= new ArrayList<>();
+
+		PreparedStatement prepStatement= conn.prepareStatement(sql.toString());
+		recursos.add(prepStatement);
+		ResultSet rs= prepStatement.executeQuery();
+
+		while(rs.next())
+			resultado.add(daop.convertResultSetTo_Persona(rs));
+
+		return resultado;
+	}
 
 
 	/**
-	 * RFC10 consumo 1 en alhohandes
+	 * RFC10 consumo 1 en alhohandes con parametros
 	 * @param fechaInicio
 	 * @param fechaFin
 	 * @param idOperador
@@ -333,7 +363,7 @@ public class DAOFC {
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList<Persona> consultaConsumoQueSeHizo(String fechaInicio, String fechaFin, Long idOperador, String TipoInmueble,
+	public ArrayList<Persona> consultaConsumoQueSeHizo(String fechaInicio, String fechaFin, Long idOperador, String tipoInmueble,
 			String tipoPersona)throws SQLException{
 
 
@@ -343,7 +373,7 @@ public class DAOFC {
 
 		sql.append(String.format("SELECT P.*, PER.* , r.*\n" + 
 				"FROM (PROPUESTA P INNER JOIN RESERVA R ON P.ID = R.ID_PROPUESTA) INNER JOIN PERSONA PER ON R.ID_PERSONA = PER.ID\n" + 
-				"WHERE r.fecha_registro >= TO_DATE('%1s', 'DD-MM-yy') and R.FECHA_REGISTRO <= TO_DATE('%2s', 'DD-MM-yy') AND PER.PAPEL = 'CLIENTE'\n" + 
+				"WHERE r.fecha_registro >= TO_DATE('%1s', 'DD-MM-YYYY') and R.FECHA_REGISTRO <= TO_DATE('%2s', 'DD-MM-YYYY') AND PER.PAPEL = 'CLIENTE'\n" + 
 				"AND PER.ID = %3d\n" + 
 				"AND TIPO_INMUEBLE LIKE '%4s'\n" + 
 				"AND TIPO LIKE '%5s'\n" + 
@@ -351,7 +381,7 @@ public class DAOFC {
 				fechaInicio,
 				fechaFin,
 				idOperador,
-				TipoInmueble,
+				tipoInmueble,
 				tipoPersona));
 
 		ArrayList<Persona> resultado= new ArrayList<>();
@@ -366,11 +396,89 @@ public class DAOFC {
 		return resultado;
 
 	}
+	
+	/**
+	 * RFC11 sin parametros
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Persona> consultaConsumoQueNoSeHizoSinAgrpar(String fechaInicio, String fechaFin) throws SQLException{
+		
+		DAOPersona daop= new DAOPersona();
+		StringBuilder sql= new StringBuilder();
 
+		sql.append(String.format("SELECT  PER.* , p.*\n" + 
+				"FROM PROPUESTA P INNER JOIN PERSONA PER ON P.ID_PERSONA = PER.ID\n" + 
+				"WHERE  NOT exists (SELECT RES.iD_PERSONA FROM RESERVA RES\n" + 
+				"                    WHERE PER.ID = RES.ID_PERSONA AND  rES.fecha_registro >= to_date('%1s', 'DD-MM-YYYY')\n" + 
+				"                       and RES.FECHA_REGISTRO <= TO_DATE('%2s', 'DD-MM-YYYY') \n" + 
+				"                       AND PER.PAPEL = 'CLIENTE')",
+				fechaInicio,
+				fechaFin));
+
+		ArrayList<Persona> resultado= new ArrayList<>();
+
+		PreparedStatement prepStatement= conn.prepareStatement(sql.toString());
+		recursos.add(prepStatement);
+		ResultSet rs= prepStatement.executeQuery();
+
+		while(rs.next())
+			resultado.add(daop.convertResultSetTo_Persona(rs));
+
+		return resultado;
+	}
+	
+	
+	/**
+	 * RFC11 agrupado
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param idPropuesta
+	 * @param TipoInmueble
+	 * @param tipoPersona
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Persona> consultaConsumoQueNoSeHizoAgrupado(String fechaInicio, String fechaFin, Long idPropuesta, String tipoInmueble,
+			String tipoPersona) throws SQLException{
+		
+		DAOPersona daop= new DAOPersona();
+		StringBuilder sql= new StringBuilder();
+
+		sql.append(String.format("SELECT  PER.* , p.*\n" + 
+				"FROM PROPUESTA P INNER JOIN PERSONA PER ON P.ID_PERSONA = PER.ID\n" + 
+				"WHERE  NOT exists (SELECT RES.iD_PERSONA FROM RESERVA RES\n" + 
+				"                    WHERE PER.ID = RES.ID_PERSONA AND  rES.fecha_registro >= to_date('%1s', 'DD-MM-YYYY')\n" + 
+				"                       and RES.FECHA_REGISTRO <= TO_DATE('%2s', 'DD-MM-YYYY') \n" + 
+				"                       AND PER.PAPEL = 'CLIENTE')\n" + 
+				"\n" + 
+				"    AND P.ID = %3d\n" + 
+				"    AND p.TIPO_INMUEBLE LIKE '%4s'\n" + 
+				"    AND per.TIPO LIKE '%5s'\n" + 
+				"ORDER BY P.ID;",
+				fechaInicio,
+				fechaFin,
+				idPropuesta,
+				tipoInmueble,
+				tipoPersona));
+
+		ArrayList<Persona> resultado= new ArrayList<>();
+
+		PreparedStatement prepStatement= conn.prepareStatement(sql.toString());
+		recursos.add(prepStatement);
+		ResultSet rs= prepStatement.executeQuery();
+
+		while(rs.next())
+			resultado.add(daop.convertResultSetTo_Persona(rs));
+
+		return resultado;
+	}
 
 
 	/**
-	 * 
+	 * RFC12 (1)
 	 * @return
 	 * @throws SQLException
 	 */
@@ -407,7 +515,7 @@ public class DAOFC {
 	
 
 	/**
-	 * 
+	 * RFC12(1) en obj
 	 * @return
 	 * @throws Exception
 	 */
@@ -426,7 +534,11 @@ public class DAOFC {
 	}
 	
 	
-	
+	/**
+	 * RFC12 (2)
+	 * @return
+	 * @throws SQLException
+	 */
 	private ArrayList<Long> noFuncionamientoPropuesta() throws SQLException{
 		
 		StringBuilder sql= new StringBuilder();
@@ -457,7 +569,11 @@ public class DAOFC {
 		return resultado;
 	}
 	
-	
+	/**
+	 * RFC12(2) en obj
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<Propuesta> noFuncionamientoPropuestaObj() throws Exception{
 		
 		DAOPersona dao= new DAOPersona();
@@ -474,7 +590,7 @@ public class DAOFC {
 
 
 	/**
-	 * 
+	 * RFC12 (3)
 	 * @return
 	 * @throws SQLException
 	 */
@@ -508,6 +624,12 @@ public class DAOFC {
 		return resultado;
 	}
 	
+	/**
+	 * RFC12(3) en obj
+	 * @param conn
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<Persona> operadoresMasSolicitadosObj(Connection conn) throws Exception{
 		
 		DAOPersona dao= new DAOPersona();
@@ -525,7 +647,7 @@ public class DAOFC {
 	}
 	
 	/**
-	 * 
+	 * RFC12(4)
 	 * @return
 	 * @throws SQLException
 	 */
@@ -559,7 +681,12 @@ public class DAOFC {
 		return resultado;
 	}
 	
-	
+	/**
+	 * RFC12(4) en obj
+	 * @param conn
+	 * @return
+	 * @throws Exception
+	 */
 	public ArrayList<Persona> operadoresMenosSolicitadosObj(Connection conn) throws Exception{
 		
 		DAOPersona dao= new DAOPersona();

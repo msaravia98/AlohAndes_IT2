@@ -13,14 +13,11 @@
 package dao;
 
 
-import java.sql.Connection; 
-
-import dao.DAOReserva;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,7 +25,17 @@ import java.util.Date;
 
 //import jdk.jshell.spi.ExecutionControl.ExecutionControlException;
 import tm.BusinessLogicException;
-import vos.*;
+import vos.Apartamento;
+import vos.Habitacion;
+import vos.Hostal;
+import vos.Hotel;
+import vos.Operador;
+import vos.Persona;
+import vos.Propuesta;
+import vos.Reserva;
+import vos.ReservaColectiva;
+import vos.ViviendaExpress;
+import vos.ViviendaUniversitaria;
 
 /**
  * Clase DAO que se conecta la base de datos usando JDBC para resolver los requerimientos de la aplicacion
@@ -230,10 +237,12 @@ public class DAOPersona {
 	{
 		Persona pep = null;
 
+		System.out.println("hola");
 
 		String sql = String.format("SELECT * FROM %1$s.PERSONA WHERE ID = %2$d", USUARIO, id); 
-
+		System.out.println(conn);
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		System.out.println("holaaaaaaaaaaaaaaaaaaaaaaa");
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
 
@@ -643,7 +652,7 @@ public class DAOPersona {
 //		String email = resultSet.getString("EMAIL");
 		
 		String papel= resultSet.getString("PAPEL");
-		Integer multa= resultSet.getInt("MULTA");
+		Integer multa= resultSet.getInt("VALOR_MULTA");
 		
 		Persona pep = new Operador(id, nombre, apellido, tipo, papel, multa);
 		pep.setMulta(multa);

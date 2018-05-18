@@ -17,7 +17,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.sun.tracing.dtrace.FunctionName;
+
 import tm.AlohandesTransactionManager;
+import vos.Persona;
+import vos.Propuesta;
 import vos.Reserva;
 import vos.ReservaColectiva;
 
@@ -204,6 +208,92 @@ public class RequerimientosService {
 				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
 			}
 	}
+	
+	/**
+	 * RFC10
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param idOperador
+	 * @param tipoInmueble
+	 * @param tipoPersona
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc10/{fechaInicio: .+}/{fechaFin: .+}/{idOperador: \\d+}/{tipoInmueble: .+}/{tipoPersona: .+}")
+	public Response consumoQueSeHizo(@PathParam("fechaInicio") String fechaInicio, @PathParam("fechaFin") String fechaFin, 
+			@PathParam("idOperador") Long idOperador, @PathParam("tipoInmueble") String tipoInmueble, @PathParam("tipoPersona") String tipoPersona) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> personas= tm.consumoQueSeHizo(fechaInicio, fechaFin, idOperador, tipoInmueble, tipoPersona);
+			return Response.status(200).entity(personas).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc12/masOcupacion")
+	public Response funcionamientoPropuestas() {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Propuesta> props= tm.funcionamientoPropuestas();
+			return Response.status(200).entity(props).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc12/masDemandados")
+	public Response operadoresMasSolicitados() {
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> props= tm.operadoresMasSolicitados();
+			return Response.status(200).entity(props).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	
+	/**
+	 * RFC13
+	 * @param cantidadMes
+	 * @param cantidadMes1
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc13/{cantMes: \\d+}/{cantMes1: \\d+}")
+	public Response buenosClientes(@PathParam("cantMes")Long cantidad0Mes, @PathParam("cantMes1")Long cantidadMes1) {
+		
+		System.out.println("hola .|.");
+		Integer cantMes= cantidad0Mes.intValue();
+		Integer cantMes1= cantidadMes1.intValue();
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> personas= tm.buenosClientes(cantMes, cantMes1);
+			return Response.status(200).entity(personas).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	
+	
 
 	
 	

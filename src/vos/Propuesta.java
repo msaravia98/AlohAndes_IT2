@@ -338,15 +338,16 @@ public class Propuesta {
 	
 	public int getDuracionDeshabilitada()throws Exception{
 		
-		if(fechaDeshabilitacionInicial == null || fechaDeshabilitacionFinal == null)
-			throw new BusinessLogicException();
-		
-		DateFormat formatoConHora= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
-        
-        Date inicio= formatoConHora.parse(fechaDeshabilitacionInicial);
-        Date fin= formatoConHora.parse(fechaDeshabilitacionFinal);
-        
-        return (int) ((fin.getTime()-inicio.getTime())/ 86400000);
+			try {
+				DateFormat formatoConHora= new SimpleDateFormat("yyyyy-mm-dd hh:mm:ss");
+		        
+		        Date inicio= formatoConHora.parse(fechaDeshabilitacionInicial);
+		        Date fin= formatoConHora.parse(fechaDeshabilitacionFinal);
+		        return (int) ((fin.getTime()-inicio.getTime())/ 86400000);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		return 0;
 	}
 
 

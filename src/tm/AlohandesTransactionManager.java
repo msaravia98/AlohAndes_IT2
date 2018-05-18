@@ -291,7 +291,7 @@ public class AlohandesTransactionManager {
 		}
 		return props;
 	}
-	
+
 	/**
 	 * Metodo que modela la transaccion que retorna todas las propuestas de la base de datos. <br/>
 	 * @return List<Bebedor> - Lista de propuestas que contiene el resultado de la consulta.
@@ -305,7 +305,7 @@ public class AlohandesTransactionManager {
 			this.conn = darConexion();
 			dao.setConn(conn);
 			res = dao.getReservas();
-			
+
 		}
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -332,7 +332,7 @@ public class AlohandesTransactionManager {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * Metodo que modela la transaccion que retorna todas las propuestas de la base de datos. <br/>
 	 * @return List<Bebedor> - Lista de propuestas que contiene el resultado de la consulta.
@@ -699,8 +699,8 @@ public class AlohandesTransactionManager {
 		return reserva;
 	}
 
-public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
-		
+	public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
+
 		DAOReserva dao= new DAOReserva();
 		List<Reserva> reservas= new ArrayList<>();
 		try 
@@ -776,16 +776,16 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 			}
 		}
 	}
-	
+
 	/**
 	 * metodo que registra la reserva en la base de datos
 	 * @param reserva
 	 * @throws Exception
 	 */
 	public void registrarReservaColectiva(ReservaColectiva reserva) throws Exception {
-		
+
 		DAOReserva dao= new DAOReserva();
-		
+
 		try {
 			this.conn= darConexion();
 			dao.setConn(conn);
@@ -839,7 +839,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 			sqlException.printStackTrace();
 			conn.rollback();
 			throw sqlException;
-			
+
 		} 
 		catch (Exception exception) {
 			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
@@ -869,9 +869,9 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 	 * @throws Exception
 	 */
 	public void cancelarReservaColectiva(Long reservaId) throws Exception{
-		
+
 		DAOReserva dao= new DAOReserva();;
-		
+
 		try
 		{
 			this.conn = darConexion();
@@ -881,7 +881,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 			else
 
 				dao.cancelarReservaColectiva(reservaId);
-				
+
 		}catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
@@ -962,7 +962,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 				throw new Exception("La propuesta con el id = " + propuesta.getId() + " no se encuentra persistida en la base de datos.");
 			else
 				dao.retirarPropuesta(propuesta);
-			
+
 		}
 		catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
@@ -1038,14 +1038,14 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param propuesta
 	 * @throws Exception
 	 */
 	public void rehabilitarPropuesta(Long id)throws Exception{
-		
+
 		DAOPersona dao= new DAOPersona();
 		Propuesta pro;
 
@@ -1053,12 +1053,12 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 			this.conn = darConexion();
 			dao.setConn( conn );
 			if(this.getPropuestaById(id) == null)
-				
+
 				throw new Exception("La propuesta con el id = " + id + " no se encuentra persistido en la base de datos.");
-				
+
 			else
 				pro = getPropuestaById(id);
-				dao.rehabilitarPropuesta(pro);
+			dao.rehabilitarPropuesta(pro);
 			conn.commit();
 		}
 		catch (SQLException sqlException) {
@@ -1137,7 +1137,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 
 		return ss;
 	}
-	
+
 	/**
 	 * RFC 2
 	 * 
@@ -1182,7 +1182,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 
 		return ss;
 	}
-	
+
 	/**
 	 * RFC 3
 	 * INDICE DE OCUPACION
@@ -1226,7 +1226,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 
 		return ss;
 	}
-	
+
 	/**
 	 * RFC 4
 	 * INDICE DE OCUPACION
@@ -1270,7 +1270,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 
 		return ss;
 	}
-	
+
 	/**
 	 * RFC 5
 	 * INDICE DE OCUPACION
@@ -1314,7 +1314,7 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 
 		return ss;
 	}
-	
+
 	/**
 	 * RFC 5
 	 * INDICE DE OCUPACION
@@ -1403,9 +1403,9 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 		return ss;
 	}
 
-	
+
 	public List<String> propuestasSinDemandas()throws Exception{
-		
+
 		DAOFC dao = new DAOFC( );
 		List<String> ss = new ArrayList<>();
 		try
@@ -1440,14 +1440,174 @@ public List<Reserva> getReservaByIdColectivo(Long id) throws Exception{
 		}	
 
 		return ss;
-		
+
+	}
+
+	/**
+	 * RFC10
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param idOperador
+	 * @param tipoInmueble
+	 * @param tipoPersona
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> consumoQueSeHizo(String fechaInicio, String fechaFin, Long idOperador, String tipoInmueble,
+			String tipoPersona) throws Exception{
+
+		DAOFC dao= new DAOFC();
+		ArrayList<Persona> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.consultaConsumoQueSeHizo(fechaInicio, fechaFin, idOperador, tipoInmueble, tipoPersona);
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
 	}
 	
+	/**
+	 * RFC12 (1)
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Propuesta> funcionamientoPropuestas() throws Exception{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Propuesta> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.funcionamientoPropuestasObj();
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
+	
+	/**
+	 * RFC12 (3)
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> operadoresMasSolicitados() throws Exception{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Persona> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.operadoresMasSolicitadosObj(darConexion());
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
 
 
 
+	/**
+	 * RFC13
+	 * @param cantMes
+	 * @param cantMes1
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> buenosClientes(Integer cantMes, Integer cantMes1)throws Exception{
 
+			DAOFC dao= new DAOFC();
+			ArrayList<Persona> ss= new ArrayList<>();
+			try {
+				this.conn= darConexion();
+				dao.setConn(conn);
+				ss= dao.buenosClientes(cantMes, cantMes1);
+			}catch (SQLException sqlException) {
+				System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+				sqlException.printStackTrace();
+				throw sqlException;
+			} 
+			catch (Exception exception) {
+				System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			} finally {
+				try {
+					dao.cerrarRecursos();
+					if(this.conn!=null){
+						this.conn.close();					
+					}
+				}
+				catch (SQLException exception) {
+					System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
 
+			return ss;
+	}
 
 
 

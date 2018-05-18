@@ -1404,15 +1404,15 @@ public class AlohandesTransactionManager {
 	}
 
 
-	public List<String> propuestasSinDemandas()throws Exception{
+	public List<Propuesta> propuestasSinDemandas()throws Exception{
 
 		DAOFC dao = new DAOFC( );
-		List<String> ss = new ArrayList<>();
+		List<Propuesta> ss = new ArrayList<>();
 		try
 		{
 			this.conn = darConexion();
 			dao.setConn( conn );
-			ss = dao.propuestasSinDemanda();
+			ss = dao.propuestasSinDemandaObj();
 
 		}
 		catch (SQLException sqlException) {
@@ -1527,6 +1527,46 @@ public class AlohandesTransactionManager {
 		return ss;
 	}
 	
+	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Propuesta> noFuncionamientoPropuesta() throws Exception{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Propuesta> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.noFuncionamientoPropuestaObj();
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
+	
 	/**
 	 * RFC12 (3)
 	 * @return
@@ -1540,6 +1580,45 @@ public class AlohandesTransactionManager {
 			this.conn= darConexion();
 			dao.setConn(conn);
 			ss= dao.operadoresMasSolicitadosObj(darConexion());
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> operadoresMenosSolicitados() throws Exception{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Persona> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.operadoresMenosSolicitadosObj(darConexion());
 		}catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();

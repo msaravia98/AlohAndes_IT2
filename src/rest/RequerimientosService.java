@@ -196,13 +196,13 @@ public class RequerimientosService {
 	 * @return
 	 */
 	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("RFC9")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc9")
 	public Response ofertasSinDemanda() {
 		
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
-			List<String> uso = tm.propuestasSinDemandas();
+			List<Propuesta> uso = tm.propuestasSinDemandas();
 			return Response.status(200).entity(uso).build();
 			}catch( Exception e ){
 				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
@@ -257,6 +257,24 @@ public class RequerimientosService {
 	 */
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc12/menosOcupacion")
+	public Response noFuncionamientoPropuesta() {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Propuesta> props= tm.noFuncionamientoPropuesta();
+			return Response.status(200).entity(props).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
 	@Path("rfc12/masDemandados")
 	public Response operadoresMasSolicitados() {
 		try {
@@ -268,6 +286,23 @@ public class RequerimientosService {
 		}
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc12/menosDemandados")
+	public Response operadoresMenosSolicitados() {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> props= tm.operadoresMenosSolicitados();
+			return Response.status(200).entity(props).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
 	
 	/**
 	 * RFC13

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import tm.BusinessLogicException;
 import vos.Persona;
 import vos.Propuesta;
@@ -276,28 +278,48 @@ public class DAOFC {
 		}
 		return res;
 	}
+	
 	/**
 	 * RFC9
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<String> propuestasSinDemanda()throws Exception{
+	private ArrayList<Long> propuestasSinDemanda()throws Exception{
+		
+		StringBuilder sql= new StringBuilder();
+		sql.append(String.format("SELECT R.ID_PROPUESTA, SUM(R.DURACION)\n" + 
+				"FROM PROPUESTA P INNER JOIN RESERVA R ON P.ID= R.ID_PROPUESTA\n" + 
+				"GROUP BY R.ID_PROPUESTA HAVING SUM(R.DURACION) <31"));
+		
+		ArrayList<Long> resultado= new ArrayList<>();
 
-		String sql= String.format("SELECT ID, TIPO_INMUEBLE FROM %1$s.PROPUESTA INNER JOIN %1$s.RESERVA"
-				+ "ON  PROPUESTA.ID = RESERVA.ID_PROPUESTA"
-				+ "WHERE RESERVA.DURACION <= 30", USUARIO);
-
-		ArrayList<String> sinDemanda = new ArrayList<String>();
-
-		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		PreparedStatement prepStmt= conn.prepareStatement(sql.toString());
 		recursos.add(prepStmt);
-		ResultSet rs = prepStmt.executeQuery();
+		ResultSet rs= prepStmt.executeQuery();
+		while(rs.next())
+			resultado.add(rs.getLong("ID_PROPUESTA"));
 
+		return resultado;
+		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Propuesta> propuestasSinDemandaObj() throws Exception{
+		
+		DAOPersona dao= new DAOPersona();
+		ArrayList<Propuesta> resultado= new ArrayList<>();
+		ArrayList<Long> ids= propuestasSinDemanda();
 
-		while (rs.next()) {
-			sinDemanda.add(rs.getLong("ID") + " "+rs.getString("TIPO_INMUEBLE"));
+		for(Long x: ids) {
+			dao.setConn(this.conn);
+			resultado.add(dao.getPropuestaById(x));
 		}
-		return sinDemanda;
+
+		return resultado;
 	}
 
 
@@ -325,7 +347,7 @@ public class DAOFC {
 				"AND PER.ID = %3d\n" + 
 				"AND TIPO_INMUEBLE LIKE '%4s'\n" + 
 				"AND TIPO LIKE '%5s'\n" + 
-				"ORDER BY P.ID;",
+				"ORDER BY P.ID",
 				fechaInicio,
 				fechaFin,
 				idOperador,
@@ -382,6 +404,7 @@ public class DAOFC {
 		return resultado;
 
 	}
+	
 
 	/**
 	 * 
@@ -393,6 +416,53 @@ public class DAOFC {
 		DAOPersona dao= new DAOPersona();
 		ArrayList<Propuesta> resultado= new ArrayList<>();
 		ArrayList<Long> ids= funcionamientoPropuestas();
+
+		for(Long x: ids) {
+			dao.setConn(this.conn);
+			resultado.add(dao.getPropuestaById(x));
+		}
+
+		return resultado;
+	}
+	
+	
+	
+	private ArrayList<Long> noFuncionamientoPropuesta() throws SQLException{
+		
+		StringBuilder sql= new StringBuilder();
+		sql.append(String.format("select lista.semana ,lista.propu , lista.dura\n" + 
+				"from \n" + 
+				"(\n" + 
+				"SELECT TO_CHAR(r.fecha_inicio, 'WW') AS SEMANA,r.id_propuesta as propu,  sum(r.duracion) as Dura\n" + 
+				"FROM (PROPUESTA P INNER JOIN RESERVA R ON P.ID= R.ID_PROPUESTA)\n" + 
+				"GROUP BY R.ID_PROPUESTA , TO_CHAR(r.fecha_inicio, 'WW')\n" + 
+				"order by TO_CHAR(r.fecha_inicio, 'WW') \n" + 
+				") lista  \n" + 
+				"where lista.dura = (select   min(res.duracion)\n" + 
+				"                    FROM PROPUESTA Prop INNER JOIN RESERVA Res ON Prop.ID= Res.ID_PROPUESTA\n" + 
+				"                            where TO_CHAR(res.fecha_inicio, 'WW') = lista.semana\n" + 
+				"                            GROUP by TO_CHAR(res.fecha_inicio, 'WW')\n" + 
+				"                                 )\n" + 
+				"\n" + 
+				"order by lista.semana"));
+
+		ArrayList<Long> resultado= new ArrayList<>();
+
+		PreparedStatement prepStmt= conn.prepareStatement(sql.toString());
+		recursos.add(prepStmt);
+		ResultSet rs= prepStmt.executeQuery();
+		while(rs.next())
+			resultado.add(rs.getLong("PROPU"));
+
+		return resultado;
+	}
+	
+	
+	public ArrayList<Propuesta> noFuncionamientoPropuestaObj() throws Exception{
+		
+		DAOPersona dao= new DAOPersona();
+		ArrayList<Propuesta> resultado= new ArrayList<>();
+		ArrayList<Long> ids= noFuncionamientoPropuesta();
 
 		for(Long x: ids) {
 			dao.setConn(this.conn);
@@ -453,6 +523,58 @@ public class DAOFC {
 			
 		return resultado;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+	private ArrayList<Long> operadoresMenosSolicitados() throws SQLException{
+		
+		StringBuilder sql= new StringBuilder();
+		sql.append(String.format("select lista.semana ,lista.OPERADOR , lista.CANT\n" + 
+				"from \n" + 
+				"(\n" + 
+				"SELECT TO_CHAR(r.fecha_inicio, 'WW') AS SEMANA,PER.ID as OPERADOR,  COUNT(r.duracion) as CANT\n" + 
+				"FROM (PROPUESTA P INNER JOIN RESERVA R ON P.ID= R.ID_PROPUESTA) INNER JOIN PERSONA PER ON P.ID_PERSONA = PER.ID\n" + 
+				"GROUP BY PER.ID , TO_CHAR(r.fecha_inicio, 'WW')\n" + 
+				"order by TO_CHAR(r.fecha_inicio, 'WW') \n" + 
+				") lista  \n" + 
+				"where lista.CANT = (select   Min(COUNT(*))\n" + 
+				"                    FROM (PROPUESTA Prop INNER JOIN RESERVA Res ON Prop.ID= Res.ID_PROPUESTA) INNER JOIN PERSONA OPER ON PROP.ID_PERSONA= OPER.ID\n" + 
+				"                            where TO_CHAR(res.fecha_inicio, 'WW') = lista.semana\n" + 
+				"                            GROUP by TO_CHAR(res.fecha_inicio, 'WW')\n" + 
+				"                                 ) \n" + 
+				"\n" + 
+				"order by lista.semana"));
+
+		ArrayList<Long> resultado= new ArrayList<>();
+
+		PreparedStatement prepStmt= conn.prepareStatement(sql.toString());
+		recursos.add(prepStmt);
+		ResultSet rs= prepStmt.executeQuery();
+		while(rs.next())
+			resultado.add(rs.getLong("OPERADOR"));
+
+		return resultado;
+	}
+	
+	
+	public ArrayList<Persona> operadoresMenosSolicitadosObj(Connection conn) throws Exception{
+		
+		DAOPersona dao= new DAOPersona();
+		ArrayList<Persona> resultado = new ArrayList<>();
+		ArrayList<Long> ids= operadoresMenosSolicitados();
+		this.conn = conn;
+		
+		for(Long x: ids)
+		{
+			dao.setConn(this.conn);
+			resultado.add(dao.findPersonaById(x));
+		}
+			
+		return resultado;
+	}
 
 
 	/**
@@ -474,7 +596,7 @@ public class DAOFC {
 				"FROM PERSONA PER INNER JOIN RESERVA RES ON PER.ID = RES.ID_PERSONA\n" + 
 				"WHERE  (SYSDATE -  RES.FECHA_INICIO) < %1d * 30\n" + 
 				"GROUP BY PER.ID\n" + 
-				"HAVING COUNT ( PER.ID) >= %2d ;\n" + 
+				"HAVING COUNT ( PER.ID) >= %2d \n" + 
 				"))", cantMes, cantMes1));
 
 		ArrayList<Persona> resultado= new ArrayList<>();

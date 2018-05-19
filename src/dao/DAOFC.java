@@ -397,6 +397,43 @@ public class DAOFC {
 
 	}
 	
+	
+	/**
+	 * RFC10 ordenando
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param pOrdenar
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Persona> consultaConsumoQueSeHizoSOrdenado(String fechaInicio, String fechaFin, String pOrdenar) throws SQLException{
+		DAOPersona daop= new DAOPersona();
+		StringBuilder sql= new StringBuilder();
+
+		sql.append(String.format("SELECT  PER.*,p.* , r.*\n" + 
+				"FROM (PROPUESTA P INNER JOIN RESERVA R ON P.ID = R.ID_PROPUESTA) INNER JOIN PERSONA PER ON R.ID_PERSONA = PER.ID\n" + 
+				"WHERE r.fecha_registro >= to_date('%1s', 'DD-MM-YYYY') and R.FECHA_REGISTRO <= TO_DATE('%2s', 'DD-MM-YYYY') AND PER.PAPEL = 'CLIENTE'"
+				+ "ORDER BY %3s",
+				fechaInicio,
+				fechaFin,
+				pOrdenar));
+
+		ArrayList<Persona> resultado= new ArrayList<>();
+
+		PreparedStatement prepStatement= conn.prepareStatement(sql.toString());
+		recursos.add(prepStatement);
+		ResultSet rs= prepStatement.executeQuery();
+
+		while(rs.next())
+			resultado.add(daop.convertResultSetTo_Persona(rs));
+
+		return resultado;
+	}
+	
+	
+	
+	
+	
 	/**
 	 * RFC11 sin parametros
 	 * @param fechaInicio
@@ -475,6 +512,43 @@ public class DAOFC {
 
 		return resultado;
 	}
+	
+	
+	/**
+	 * RFC11 ordenado
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @return
+	 * @throws SQLException
+	 */
+	public ArrayList<Persona> consultaConsumoQueNoSeHizoOrdenado(String fechaInicio, String fechaFin, String pOrdenar) throws SQLException{
+		
+		DAOPersona daop= new DAOPersona();
+		StringBuilder sql= new StringBuilder();
+
+		sql.append(String.format("SELECT  PER.* , p.*\n" + 
+				"FROM PROPUESTA P INNER JOIN PERSONA PER ON P.ID_PERSONA = PER.ID\n" + 
+				"WHERE  NOT exists (SELECT RES.iD_PERSONA FROM RESERVA RES\n" + 
+				"                    WHERE PER.ID = RES.ID_PERSONA AND  rES.fecha_registro >= to_date('%1s', 'DD-MM-YYYY')\n" + 
+				"                       and RES.FECHA_REGISTRO <= TO_DATE('%2s', 'DD-MM-YYYY') \n" + 
+				"                       AND PER.PAPEL = 'CLIENTE')"
+				+ "ORDER BY %3s",
+				fechaInicio,
+				fechaFin,
+				pOrdenar));
+
+		ArrayList<Persona> resultado= new ArrayList<>();
+
+		PreparedStatement prepStatement= conn.prepareStatement(sql.toString());
+		recursos.add(prepStatement);
+		ResultSet rs= prepStatement.executeQuery();
+
+		while(rs.next())
+			resultado.add(daop.convertResultSetTo_Persona(rs));
+
+		return resultado;
+	}
+	
 
 
 	/**

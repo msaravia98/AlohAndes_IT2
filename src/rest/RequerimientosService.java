@@ -255,6 +255,27 @@ public class RequerimientosService {
 	}
 	
 	/**
+	 * RFC10 ordenado
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param pOrdenar
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc10/{fechaInicio: .+}/{fechaFin: .+}/{pOrdenar: .+}")
+	public Response consumoQueSeHizoOrdenado(@PathParam("fechaInicio")String fechaInicio, @PathParam("fechaFin") String fechaFin,@PathParam("pOrdenar") String pOrdenar) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> personas= tm.consultaConsumoQueSeHizoOrdenado(fechaInicio, fechaFin, pOrdenar);
+			return Response.status(200).entity(personas).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	/**
 	 * rfc11 sin parametros
 	 * @param fechaInicio
 	 * @param fechaFin
@@ -292,6 +313,27 @@ public class RequerimientosService {
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
 			List<Persona> personas= tm.consumoQueSeHizo(fechaInicio, fechaFin, idPropuesta, tipoInmueble, tipoPersona);
+			return Response.status(200).entity(personas).build();
+		}catch( Exception e ){
+			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+		}
+	}
+	
+	/**
+	 * rfc11 ordenado
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param pOrdenar
+	 * @return
+	 */
+	@GET
+	@Produces({MediaType.APPLICATION_JSON})
+	@Path("rfc11/{fechaInicio: .+}/{fechaFin: .+}/{pOrdenar: .+}")
+	public Response consumoQueNoSeHizoOrdenado(@PathParam("fechaInicio")String fechaInicio,@PathParam("fechaFin") String fechaFin,@PathParam("pOrdenar") String pOrdenar) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<Persona> personas= tm.consultaConsumoQueNoSeHizoOrdendo(fechaInicio, fechaFin, pOrdenar);
 			return Response.status(200).entity(personas).build();
 		}catch( Exception e ){
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );

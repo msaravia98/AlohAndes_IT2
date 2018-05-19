@@ -1530,6 +1530,50 @@ public class AlohandesTransactionManager {
 	}
 	
 	/**
+	 * RFC10 ordenado
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param pOrdenar
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> consultaConsumoQueSeHizoOrdenado(String fechaInicio, String fechaFin, String pOrdenar) throws Exception{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Persona> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.consultaConsumoQueSeHizoSOrdenado(fechaInicio, fechaFin, pOrdenar);
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
+	
+	
+	
+	/**
 	 * RFC11 sin agrupar
 	 * @param fechaInicio
 	 * @param fechaFin
@@ -1571,7 +1615,16 @@ public class AlohandesTransactionManager {
 	}
 	
 	
-	
+	/**
+	 * RFC11 a
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param idPropuesta
+	 * @param tipoInmueble
+	 * @param tipoPersona
+	 * @return
+	 * @throws SQLException
+	 */
 	public ArrayList<Persona> consumoQueNoSeHizoAgrupado(String fechaInicio, String fechaFin, Long idPropuesta, String tipoInmueble,
 			String tipoPersona) throws SQLException{
 		
@@ -1581,6 +1634,48 @@ public class AlohandesTransactionManager {
 			this.conn= darConexion();
 			dao.setConn(conn);
 			ss= dao.consultaConsumoQueNoSeHizoAgrupado(fechaInicio, fechaFin, idPropuesta, tipoInmueble, tipoPersona);
+		}catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+
+		return ss;
+	}
+	
+	/**
+	 * RFC11 ordenado
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @param pOrdenar
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> consultaConsumoQueNoSeHizoOrdendo(String fechaInicio, String fechaFin, String pOrdenar) throws Exception{
+		
+		DAOFC dao= new DAOFC();
+		ArrayList<Persona> ss= new ArrayList<>();
+		try {
+			this.conn= darConexion();
+			dao.setConn(conn);
+			ss= dao.consultaConsumoQueNoSeHizoOrdenado(fechaInicio, fechaFin, pOrdenar);
 		}catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();

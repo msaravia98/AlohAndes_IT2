@@ -246,6 +246,109 @@ public class DAOFC {
 		}
 		return retornar;
 	}
+	/**
+
+	 * RFC7 - ANALIZAR LA OPERACIÓN DE ALOHANDES 
+	 * 
+	 * Para una unidad de tiempo definido (por ejemplo, semana o mes) y un tipo de alojamiento, considerando todo
+	 * el tiempo de operación de AloHandes, indicar cuáles fueron las fechas de mayor demanda (mayor cantidad de
+	 * alojamientos ocupados), las de mayores ingresos (mayor cantidad de dinero recibido) y las de menor ocupación.
+	 * @param filtro { mayor | ingresos | menor } = Mayor ocupacion, mayores ingresos o menor ocupacion.
+	 * @param tiempo { semana | mes } = String que especifica si se trata de las semanaas o de los meses
+	 * @param tipo_alojamiento { Apartamento | Hotel | Hostel | Vivienda Universitaria | Vivienda Express | Habitacion }
+	 * @return Lista de las 
+	 * @throws BusinessLogicException, SQLException, Exception 
+	 */
+	public List<String> propuestasMayorDemanda ( String filtro, String tiempo, String tipo_alojamiento ) throws BusinessLogicException, SQLException, Exception {
+
+		if ( filtro.isEmpty() || tiempo.isEmpty() || tipo_alojamiento.isEmpty() )
+			throw new BusinessLogicException("Parametros invalidos : " + filtro + " " + tiempo + " " +tipo_alojamiento);
+
+		if ( filtro.equalsIgnoreCase("mayor") || filtro.equalsIgnoreCase("menor") ) {
+			String desc = filtro.equalsIgnoreCase("mayor") ? "DESC" : " ";
+			String mayor_ocupacional = "";
+
+			if ( tiempo.equalsIgnoreCase("semana") ) {
+				mayor_ocupacional = 
+						"SELECT to_number(to_char(R.FECHA_INICIO),'WW')) AS \"TIEMPO\",  COUNT (to_number(to_char(R.FECHA_INICIO_ESTADIA),'WW'))) AS \"CANTIDAD_RESERVAS\" " + 
+								"FROM RESERVA R " + 
+								"INNER JOIN PROPUESTA P ON " + 
+								"R.ID_PROPUESTA = P.ID " + 
+								"WHERE UPPER(P.TIPO_INMUEBLE) = UPPER('"+ tipo_alojamiento +"') " + 
+								"AND ( R.MULTA IS NULL " + 
+								"OR R.MULTA = 0 ) " + 
+								"GROUP BY to_number(to_char(R.FECHA_INICIO_ESTADIA),'WW')) " + 
+								"ORDER BY \"CANTIDAD_RESERVAS\" " + desc + " ";
+			} else if ( tiempo.equalsIgnoreCase("mes") ) {
+
+				mayor_ocupacional = 
+						"SELECT to_number(to_char(R.FECHA_INICIO),'Month')) AS \"TIEMPO\",  COUNT (to_number(to_char(R.FECHA_INICIO_ESTADIA),'Month'))) AS \"CANTIDAD_RESERVAS\" " + 
+								"FROM RESERVA R " + 
+								"INNER JOIN PROPUESTA P ON " + 
+								"R.ID_PROPUESTA = P.ID " + 
+								"WHERE UPPER(P.TIPO_INMUEBLE) = UPPER('"+ tipo_alojamiento +"') " + 
+								"AND ( R.MULTA IS NULL " + 
+								"OR R.MULTA = 0 ) " + 
+								"GROUP BY to_number(to_char(R.FECHA_INICIO_ESTADIA),'Month')) " + 
+								"ORDER BY \"CANTIDAD_RESERVAS\" " + desc + " ";
+			}
+
+			List<String> apps = new ArrayList<>();
+
+			PreparedStatement prepStmt = conn.prepareStatement(mayor_ocupacional);
+			recursos.add(prepStmt);
+			ResultSet rs = prepStmt.executeQuery();
+
+			while ( rs.next() ) {
+				String ap = new String("Las propuestas con mayor demenda con fecha inicio "+rs.getString("TIEMPO")+" tienen "+ rs.getDouble("CANTIDAD_RESERVAS")+" reservas");
+				apps.add(ap);
+			}
+			return apps;
+		}
+
+		else if ( filtro.equalsIgnoreCase("ingresos") ) {
+
+			String ingresos = "";
+
+			if ( tiempo.equalsIgnoreCase("semana") ) {
+				ingresos = 
+						"SELECT R.FECHA_INICIO AS \"TIEMPO\", SUM(R.COSTO) AS \"INGRESOS\" " + 
+								"FROM RESERVA R " + 
+								"INNER JOIN PROPUESTA P ON " + 
+								"R.ID_PROPUESTA = P.ID " + 
+								"WHERE UPPER(P.TIPO_INMUEBLE) = UPPER('" + tipo_alojamiento + "') " + 
+								"AND ( R.MULTA IS NULL " + 
+								"OR R.MULTA = 0 ) " + 
+								"GROUP BY R.FECHA_INICIO_ESTADIA" + 
+								"ORDER BY \"INGRESOS\" DESC";
+			} 		
+			else if ( tiempo.equalsIgnoreCase("mes") ) {
+				ingresos = 
+						"SELECT TO_CHAR(R.FECHA_INICIO, 'Month') AS \"TIEMPO\", SUM(R.COSTO) AS \"INGRESOS\" " + 
+								"FROM RESERVA R " + 
+								"INNER JOIN PROPUESTA P ON " + 
+								"R.ID_PROPUESTA = P.ID " + 
+								"WHERE UPPER(P.TIPO_INMUEBLE) = UPPER('" + tipo_alojamiento + "') " +
+								"AND ( R.MULTA IS NULL  " + 
+								"OR R.MULTA = 0 ) " + 
+								"GROUP BY TO_CHAR(R.FECHA_INICIO, 'Month') " + 
+								"ORDER BY \"INGRESOS\" DESC";
+			}
+
+			List<String> apps = new ArrayList<>();
+
+			PreparedStatement prepStmt = conn.prepareStatement(ingresos);
+			recursos.add(prepStmt);
+			ResultSet rs = prepStmt.executeQuery();
+
+			while ( rs.next() ) {
+				String ap = new String("Las propuestas con mayor demenda con fecha inicio "+rs.getString("TIEMPO")+" tienen "+ rs.getDouble("CANTIDAD_RESERVAS")+" reservas");
+				apps.add(ap);
+			}
+			return apps;
+		}
+		return new ArrayList<>();
+	}
 
 	/**
 	 * RF8

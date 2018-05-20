@@ -1359,6 +1359,49 @@ public class AlohandesTransactionManager {
 		return ss;
 	}
 	/**
+	 * RFC 7
+	 * @return
+	 * @throws Exception
+	 */
+	public List<String> darAnálisisProp(String filtro,String tiempo,String tipo_alojamiento) throws Exception 
+	{
+		DAOFC dao = new DAOFC( );
+		List<String> ss = new ArrayList<>();
+		try
+		{
+			this.conn = darConexion();
+			dao.setConn(conn);
+			ss = dao.propuestasMayorDemanda(filtro, tiempo, tipo_alojamiento);
+
+		}
+		catch (SQLException sqlException) {
+			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
+			sqlException.printStackTrace();
+			throw sqlException;
+		} 
+		catch (Exception exception) {
+			System.err.println("[EXCEPTION] General Exception:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		} 
+		finally {
+			try {
+				dao.cerrarRecursos();
+				if(this.conn!=null){
+					this.conn.close();					
+				}
+			}
+			catch (SQLException exception) {
+				System.err.println("[EXCEPTION] SQLException While Closing Resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}	
+
+		return ss;
+	}
+
+	/**
 	 * RFC 8
 	 * 
 	 * 

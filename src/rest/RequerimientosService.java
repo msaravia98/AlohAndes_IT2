@@ -170,7 +170,22 @@ public class RequerimientosService {
 			}
 	}
 	
-	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("RFC7")
+	public Response darOperacionAlohAndes(@QueryParam ("filtro") String filtro,
+			@QueryParam ("tiempo") String tiempo,
+			@QueryParam ("tipo_alojamiento") String tipo_alojamiento) {
+		
+		try {
+			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
+			List<String> uso = tm.darAnálisisProp(filtro, tiempo, tipo_alojamiento);
+			return Response.status(200).entity(uso).build();
+			}catch( Exception e ){
+				return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );
+			}
+	}
+
 	/**
 	 * 
 	 * @param reserva

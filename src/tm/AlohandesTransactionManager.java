@@ -1794,7 +1794,7 @@ public class AlohandesTransactionManager {
 		try {
 			this.conn= darConexion();
 			dao.setConn(conn);
-			ss= dao.operadoresMasSolicitadosObj(darConexion());
+			ss= dao.operadoresMasSolicitados();
 		}catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();
@@ -1833,7 +1833,7 @@ public class AlohandesTransactionManager {
 		try {
 			this.conn= darConexion();
 			dao.setConn(conn);
-			ss= dao.operadoresMenosSolicitadosObj(darConexion());
+			ss= dao.operadoresMenosSolicitados();
 		}catch (SQLException sqlException) {
 			System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 			sqlException.printStackTrace();

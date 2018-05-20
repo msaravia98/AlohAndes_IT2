@@ -668,10 +668,12 @@ public class DAOFC {
 	 * @return
 	 * @throws SQLException
 	 */
-	private ArrayList<Long> operadoresMasSolicitados() throws SQLException{
+	public ArrayList<Persona> operadoresMasSolicitados() throws SQLException{
 
+		DAOPersona dao= new DAOPersona();
 		StringBuilder sql= new StringBuilder();
-		sql.append(String.format("select lista.semana ,lista.OPERADOR , lista.CANT\n" + 
+		sql.append(String.format("select pr.* from persona pr,\n" + 
+				"(select lista.semana ,lista.OPERADOR , lista.CANT\n" + 
 				"from \n" + 
 				"(\n" + 
 				"SELECT TO_CHAR(r.fecha_inicio, 'WW') AS SEMANA,PER.ID as OPERADOR,  COUNT(r.duracion) as CANT\n" + 
@@ -681,54 +683,58 @@ public class DAOFC {
 				") lista  \n" + 
 				"where lista.CANT = (select   MAX(COUNT(*))\n" + 
 				"                    FROM (PROPUESTA Prop INNER JOIN RESERVA Res ON Prop.ID= Res.ID_PROPUESTA) INNER JOIN PERSONA OPER ON PROP.ID_PERSONA= OPER.ID\n" + 
-				"                            where TO_CHAR(res.fecha_inicio, 'WW') = lista.semana\n" + 
-				"                            GROUP by TO_CHAR(res.fecha_inicio, 'WW')\n" + 
+				"                            where TO_CHAR(res.fecha_inicio, 'WW') = lista.semana  \n" + 
+				"                            GROUP by oper.id, TO_CHAR(res.fecha_inicio, 'WW')\n" + 
 				"                                 ) \n" + 
 				"\n" + 
-				"order by lista.semana"));
+				"order by lista.semana) opers\n" + 
+				"where pr.id= opers.operador"));
 
-		ArrayList<Long> resultado= new ArrayList<>();
+		ArrayList<Persona> resultado= new ArrayList<>();
 
 		PreparedStatement prepStmt= conn.prepareStatement(sql.toString());
 		recursos.add(prepStmt);
 		ResultSet rs= prepStmt.executeQuery();
 		while(rs.next())
-			resultado.add(rs.getLong("OPERADOR"));
+			resultado.add(dao.convertResultSetTo_Persona(rs));
 
 		return resultado;
 	}
 	
-	/**
-	 * RFC12(3) en obj
-	 * @param conn
-	 * @return
-	 * @throws Exception
-	 */
-	public ArrayList<Persona> operadoresMasSolicitadosObj(Connection conn) throws Exception{
-		
-		DAOPersona dao= new DAOPersona();
-		ArrayList<Persona> resultado = new ArrayList<>();
-		ArrayList<Long> ids= operadoresMasSolicitados();
-		this.conn = conn;
-		
-		for(Long x: ids)
-		{
-			dao.setConn(this.conn);
-			resultado.add(dao.findPersonaById(x));
-		}
-			
-		return resultado;
-	}
+//	/**
+//	 * RFC12(3) en obj
+//	 * @param conn
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public ArrayList<Persona> operadoresMasSolicitadosObj(Connection conn) throws Exception{
+//		
+//		DAOPersona dao= new DAOPersona();
+//		ArrayList<Persona> resultado = new ArrayList<>();
+//		ArrayList<Long> ids= operadoresMasSolicitados();
+//		this.conn = conn;
+//		
+//		for(Long x: ids)
+//		{
+//			dao.setConn(this.conn);
+//			resultado.add(dao.findPersonaById(x));
+//		}
+//			
+//		return resultado;
+//	}
 	
 	/**
 	 * RFC12(4)
 	 * @return
 	 * @throws SQLException
 	 */
-	private ArrayList<Long> operadoresMenosSolicitados() throws SQLException{
+	public ArrayList<Persona> operadoresMenosSolicitados() throws SQLException{
 		
+		
+		DAOPersona dao= new DAOPersona();
 		StringBuilder sql= new StringBuilder();
-		sql.append(String.format("select lista.semana ,lista.OPERADOR , lista.CANT\n" + 
+		sql.append(String.format("select pr.* from persona pr,\n" + 
+				"(select lista.semana ,lista.OPERADOR , lista.CANT\n" + 
 				"from \n" + 
 				"(\n" + 
 				"SELECT TO_CHAR(r.fecha_inicio, 'WW') AS SEMANA,PER.ID as OPERADOR,  COUNT(r.duracion) as CANT\n" + 
@@ -736,48 +742,55 @@ public class DAOFC {
 				"GROUP BY PER.ID , TO_CHAR(r.fecha_inicio, 'WW')\n" + 
 				"order by TO_CHAR(r.fecha_inicio, 'WW') \n" + 
 				") lista  \n" + 
-				"where lista.CANT = (select   Min(COUNT(*))\n" + 
+				"where lista.CANT = (select   MIN(COUNT(*))\n" + 
 				"                    FROM (PROPUESTA Prop INNER JOIN RESERVA Res ON Prop.ID= Res.ID_PROPUESTA) INNER JOIN PERSONA OPER ON PROP.ID_PERSONA= OPER.ID\n" + 
 				"                            where TO_CHAR(res.fecha_inicio, 'WW') = lista.semana\n" + 
-				"                            GROUP by TO_CHAR(res.fecha_inicio, 'WW')\n" + 
+				"                            GROUP by TO_CHAR(res.fecha_inicio, 'WW'), oper.id\n" + 
 				"                                 ) \n" + 
 				"\n" + 
-				"order by lista.semana"));
+				"order by lista.semana) opers\n" + 
+				"where pr.id= opers.operador"));
 
-		ArrayList<Long> resultado= new ArrayList<>();
+		ArrayList<Persona> resultado= new ArrayList<>();
 
 		PreparedStatement prepStmt= conn.prepareStatement(sql.toString());
 		recursos.add(prepStmt);
 		ResultSet rs= prepStmt.executeQuery();
 		while(rs.next())
-			resultado.add(rs.getLong("OPERADOR"));
+			resultado.add(dao.convertResultSetTo_Persona(rs));
 
 		return resultado;
 	}
 	
+//	/**
+//	 * RFC12(4) en obj
+//	 * @param conn
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public ArrayList<Persona> operadoresMenosSolicitadosObj(Connection conn) throws Exception{
+//		
+//		DAOPersona dao= new DAOPersona();
+//		ArrayList<Persona> resultado = new ArrayList<>();
+//		ArrayList<Long> ids= operadoresMenosSolicitados();
+//		this.conn = conn;
+//		
+//		for(Long x: ids)
+//		{
+//			dao.setConn(this.conn);
+//			resultado.add(dao.findPersonaById(x));
+//		}
+//			
+//		return resultado;
+//	}
+
+
 	/**
-	 * RFC12(4) en obj
-	 * @param conn
+	 * RFC13 los ids
+	 * @param cantMes
 	 * @return
-	 * @throws Exception
+	 * @throws SQLException
 	 */
-	public ArrayList<Persona> operadoresMenosSolicitadosObj(Connection conn) throws Exception{
-		
-		DAOPersona dao= new DAOPersona();
-		ArrayList<Persona> resultado = new ArrayList<>();
-		ArrayList<Long> ids= operadoresMenosSolicitados();
-		this.conn = conn;
-		
-		for(Long x: ids)
-		{
-			dao.setConn(this.conn);
-			resultado.add(dao.findPersonaById(x));
-		}
-			
-		return resultado;
-	}
-
-
 	public ArrayList<Long> buenosClientesIds(Integer cantMes)throws SQLException{
 		
 		

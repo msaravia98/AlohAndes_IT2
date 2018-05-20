@@ -778,6 +778,59 @@ public class DAOFC {
 	}
 
 
+	public ArrayList<Long> buenosClientesIds(Integer cantMes)throws SQLException{
+		
+		
+		StringBuilder sql= new StringBuilder();
+		sql.append(String.format("SELECT DISTINCT P.id\n" + 
+				"FROM (PERSONA P INNER JOIN RESERVA R ON P.ID = R.ID_PERSONA), PROPUESTA PROP, HOTEL H\n" + 
+				"WHERE (PROP.ID= R.ID_PROPUESTA AND PROP.ID_HOTEL= H.ID AND  H.TIPO_HABITACION ='Suite' ) union\n" + 
+				"select p.id from persona p inner join reserva r on p.id=r.id_persona\n" + 
+				"where R.COSTO/R.DURACION >= 150\n" + 
+				"union \n" + 
+				"---OR (P.ID IN (\n" + 
+				"SELECT DISTINCT PER.id\n" + 
+				"FROM PERSONA PER INNER JOIN RESERVA RES ON PER.ID = RES.ID_PERSONA\n" + 
+				"WHERE  (SYSDATE -  RES.FECHA_INICIO) < "+cantMes + "* 30\n" + 
+				"GROUP BY PER.ID\n" + 
+				"HAVING COUNT ( PER.ID) >= "+cantMes));
+		ArrayList<Long> resultado= new ArrayList<>();
+
+		PreparedStatement prepStmt= conn.prepareStatement(sql.toString());
+		recursos.add(prepStmt);
+		ResultSet rs= prepStmt.executeQuery();
+		while(rs.next())
+			resultado.add(rs.getLong("ID"));
+
+		return resultado;
+		
+	}
+	
+	/**
+	 * RFC13 el que si
+	 * @param cantMes
+	 * @param conn
+	 * @return
+	 * @throws Exception
+	 */
+	public ArrayList<Persona> buenosClientes(Integer cantMes, Connection conn)throws Exception{
+		
+		DAOPersona dao= new DAOPersona();
+		ArrayList<Persona> resultado = new ArrayList<>();
+		ArrayList<Long> ids= buenosClientesIds(cantMes);
+		this.conn = conn;
+		
+		for(Long x: ids)
+		{
+			dao.setConn(this.conn);
+			resultado.add(dao.findPersonaById(x));
+		}
+			
+		return resultado;
+	}
+	
+	
+	
 	/**
 	 * RFC13
 	 * @param cantMes
@@ -785,7 +838,7 @@ public class DAOFC {
 	 * @return
 	 * @throws SQLException
 	 */
-	public ArrayList<Persona> buenosClientes(Integer cantMes, Integer cantMes1)throws SQLException{
+	/*public ArrayList<Persona> buenosClientes(Integer cantMes, Integer cantMes1)throws SQLException{   //este nooooooooooooo
 
 		DAOPersona daoP= new DAOPersona();
 		StringBuilder sql= new StringBuilder();
@@ -811,7 +864,7 @@ public class DAOFC {
 		return resultado;
 
 
-	}
+	}*/
 
 
 	//----------------------------------------------------------------------------------------------------------------------------------

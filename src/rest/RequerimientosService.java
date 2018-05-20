@@ -420,15 +420,14 @@ public class RequerimientosService {
 	 */
 	@GET
 	@Produces({MediaType.APPLICATION_JSON})
-	@Path("rfc13/{cantMes: \\d+}/{cantMes1: \\d+}")
-	public Response buenosClientes(@PathParam("cantMes")Long cantidad0Mes, @PathParam("cantMes1")Long cantidadMes1) {
+	@Path("rfc13/{cantMes: \\d+}")
+	public Response buenosClientes(@PathParam("cantMes")Long cantidad0Mes) {
 		
 		System.out.println("hola .|.");
 		Integer cantMes= cantidad0Mes.intValue();
-		Integer cantMes1= cantidadMes1.intValue();
 		try {
 			AlohandesTransactionManager tm= new AlohandesTransactionManager(getPath());
-			List<Persona> personas= tm.buenosClientes(cantMes, cantMes1);
+			List<Persona> personas= tm.buenosClientes(cantMes);
 			return Response.status(200).entity(personas).build();
 		}catch( Exception e ){
 			return Response.status( 500 ).entity( doErrorMessage( e ) ).build( );

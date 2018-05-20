@@ -1869,14 +1869,14 @@ public class AlohandesTransactionManager {
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<Persona> buenosClientes(Integer cantMes, Integer cantMes1)throws Exception{
+	public ArrayList<Persona> buenosClientes(Integer cantMes)throws Exception{
 
 			DAOFC dao= new DAOFC();
 			ArrayList<Persona> ss= new ArrayList<>();
 			try {
 				this.conn= darConexion();
 				dao.setConn(conn);
-				ss= dao.buenosClientes(cantMes, cantMes1);
+				ss= dao.buenosClientes(cantMes, darConexion());
 			}catch (SQLException sqlException) {
 				System.err.println("[EXCEPTION] SQLException:" + sqlException.getMessage());
 				sqlException.printStackTrace();
